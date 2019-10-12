@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="io.renren.dao.MmCellcardProcessLogDao">
+
+	<!-- 可根据自己的需求，是否要使用 -->
+    <resultMap type="io.renren.entity.MmCellcardProcessLogEntity" id="mmCellcardProcessLogMap">
+        <result property="id" column="id"/>
+        <result property="productOrderCode" column="product_order_code"/>
+        <result property="chargingToken" column="charging_token"/>
+        <result property="networkEnv" column="network_env"/>
+        <result property="pinCode" column="pin_code"/>
+        <result property="userHe" column="user_he"/>
+        <result property="validationResult" column="validation_result"/>
+        <result property="description" column="description"/>
+        <result property="merchantId" column="merchant_id"/>
+        <result property="operatorId" column="operator_id"/>
+        <result property="productId" column="product_id"/>
+        <result property="reqIp" column="req_ip"/>
+        <result property="ext1" column="ext1"/>
+        <result property="ext2" column="ext2"/>
+        <result property="ext3" column="ext3"/>
+        <result property="isAvailable" column="is_available"/>
+        <result property="createTime" column="create_time"/>
+        <result property="updateTime" column="update_time"/>
+        <result property="consumerIdentity" column="consumer_identity"/>
+    </resultMap>
+
+	<select id="getByProductOrderCode" resultType="io.renren.entity.MmCellcardProcessLogEntity">
+		select * from mm_cellcard_process_log where product_order_code = #{productOrderCode}
+	</select>
+	
+	<!-- parameterType="io.renren.entity.MmCellcardProcessLogEntity" -->
+	<update id="updateByProductOrderCode" >
+		update mm_cellcard_process_log 
+		<trim prefix="set" suffixOverrides="," >
+			update_time = now(),
+			<if test="userHe!=null">user_he=#{userHe},</if>
+			<if test="chargingToken!=null">charging_token=#{chargingToken},</if>
+			<if test="validationResult!=null">validation_result=#{validationResult},</if>
+			<if test="description!=null">description=CONCAT(description,#{description}),</if>
+			<if test="pinCode!=null">pin_code=#{pinCode},</if>
+			<if test="consumerIdentity!=null">consumer_identity=#{consumerIdentity},</if>
+			<if test="ext1!=null">ext1=#{ext1},</if>
+			<if test="ext2!=null">ext2=#{ext2},</if>
+			<if test="ext3!=null">ext3=#{ext3},</if>
+		</trim>
+		where product_order_code = #{productOrderCode}
+		
+		<!-- 			<if test="cplEntity.chargingToken!=null">charging_token=#{cplEntity.chargingToken},</if>
+			<if test="cplEntity.userHe!=null">user_he=#{cplEntity.userHe},</if>
+			<if test="cplEntity.validationResult!=null">validation_result=#{cplEntity.validationResult},</if>
+			<if test="cplEntity.description!=null">description=CONCAT(description,#{cplEntity.description}),</if>
+			<if test="cplEntity.updateTime!=null">update_time=#{cplEntity.updateTime},</if>
+			<if test="cplEntity.pinCode!=null">pin_code=#{cplEntity.pinCode},</if>
+			<if test="cplEntity.ext1!=null">ext1=#{cplEntity.ext1},</if>
+			<if test="cplEntity.ext2!=null">ext2=#{cplEntity.ext2},</if>
+			<if test="cplEntity.ext3!=null">ext3=#{cplEntity.ext3},</if> -->
+	</update>
+
+	<update id="additionalDescByProductOrderCode" >
+		update mm_cellcard_process_log 
+		<trim prefix="set" suffixOverrides="," >
+			<if test="description!=null and description != ''">description=CONCAT(description,#{description}),</if>
+		</trim>
+		where product_order_code = #{productOrderCode}
+	</update>
+
+	<select id="getWIFIUserUniqueByUserPhone" resultType="io.renren.entity.MmCellcardProcessLogEntity">
+		select * from mm_cellcard_process_log where validation_result = "verified" 
+		and user_he = #{userPhone} order by create_time desc; 
+	</select>
+
+
+</mapper>

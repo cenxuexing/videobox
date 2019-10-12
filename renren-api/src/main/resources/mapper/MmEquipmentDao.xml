@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="io.renren.dao.MmEquipmentDao">
+
+	<!-- 可根据自己的需求，是否要使用 -->
+    <resultMap type="io.renren.entity.MmEquipmentEntity" id="mmEquipmentMap">
+        <result property="id" column="id"/>
+        <result property="clientIp" column="client_ip"/>
+        <result property="driverInfo" column="driver_info"/>
+        <result property="sourceInfo" column="source_info"/>
+        <result property="professionalType" column="professional_type"/>
+        <result property="professionalCode" column="professional_code"/>
+        <result property="createTime" column="create_time"/>
+        <result property="updateTime" column="update_time"/>
+        <result property="createBy" column="create_by"/>
+        <result property="updateBy" column="update_by"/>
+        <result property="isAvailable" column="is_available"/>
+    </resultMap>
+
+
+</mapper>

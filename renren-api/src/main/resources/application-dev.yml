@@ -1,0 +1,121 @@
+eureka:
+  #  registerId: 127.0.0.1
+  #  instance:
+  #    ipAddress: 127.0.0.1
+  #    preferIpAddress: true
+  #    instance-id: http://${eureka.instance.ipAddress}:${server.port}/renren-api/
+  #    health-check-url: http://${eureka.instance.ipAddress}:${server.port}${server.servlet.context-path:}/actuator/health
+  #    status-page-url: http://${eureka.instance.ipAddress}:${server.port}${server.servlet.context-path:}/actuator/info
+  #    home-page-url: http://${eureka.instance.ipAddress}:${server.port}${server.servlet.context-path:}
+  #    metadata-map:
+  #      configPath: ${server.servlet.context-path:}
+  #      management:
+  #        context-path: ${server.servlet.context-path:}
+  client:
+    serviceUrl:
+      defaultZone: http://localhost:8761/eureka/
+server:
+  port: 8280
+
+spring:
+  application:
+    name: sourtheast-asia
+  datasource:
+    type: com.alibaba.druid.pool.DruidDataSource
+    driverClassName: com.mysql.jdbc.Driver
+    druid:
+      url: jdbc:mysql://192.168.40.184:3306/renren_security?allowMultiQueries=true&useUnicode=true&characterEncoding=UTF-8&useLegacyDatetimeCode=false&serverTimezone=UTC
+      username: root
+      password: root123456
+      initial-size: 1
+      min-idle: 1
+      max-active: 10
+      max-wait: 60000
+      pool-prepared-statements: true
+      max-pool-prepared-statement-per-connection-size: 20
+      time-between-eviction-runs-millis: 60000
+      min-evictable-idle-time-millis: 300000
+      validation-query: SELECT 1 FROM DUAL
+      test-while-idle: true
+      test-on-borrow: false
+      test-on-return: false
+      stat-view-servlet:
+        enabled: true
+        url-pattern: /druid/*
+        #login-username: admin
+        #login-password: admin
+      filter:
+        stat:
+          log-slow-sql: true
+          slow-sql-millis: 1000
+          merge-sql: false
+        wall:
+          config:
+            multi-statement-allow: true
+  redis:
+    database: 1
+    host: 192.168.40.184
+    port: 63799
+    password: redis123456 # 密码（默认为空）
+    timeout: 6000ms  # 连接超时时长（毫秒）
+    ssl: false
+    jedis:
+      pool:
+        max-active: 1000  # 连接池最大连接数（使用负值表示没有限制）
+        max-wait: -1ms      # 连接池最大阻塞等待时间（使用负值表示没有限制）
+        max-idle: 10      # 连接池中的最大空闲连接
+        min-idle: 5       # 连接池中的最小空闲连接
+
+  rabbitmq:
+    host: 192.168.40.183
+    #host: 119.3.19.234
+    #host: 52.172.142.162
+    port: 5672
+    username: testrenren
+    password: 123456
+    virtual-host: /
+    template:  #模版
+      retry:   #重试相关信息
+        enabled: true
+        initial-interval: 10000ms  #重试周期
+        max-interval: 30000ms   #最大重试周期
+        multiplier: 2    #重试周期 * 2，不超过max-interval
+      mandatory: true #回调
+
+    publisher-confirms: true  #开启生产者确认
+    publisher-returns: true #开启发送失败退回
+ph:
+  sm:
+    sp_password: G2fhAaiX
+    sub_url: http://125.60.148.174:8312/1/smsmessaging/outbound/2404124/requests
+    notify_url: http://rpsmapi.uarocky.com/renren-api/ph/notify/client/delivery/status
+    server_id: 0084002000008781
+    product_id: 1000016205
+  wap:
+    server_id: 0084002000008781
+    sub_url: http://125.60.148.174:8310/SubscribeManageService/services/SubscribeManage
+    product_id: 1000016205
+    notify_url: rpsmapi.uarocky.com/sync/sms/order/relation
+
+th:
+  user: RockyMobi
+  password: RockyMobi
+  cpId: 3017
+  serviceId: 3017001
+  sub_url: http://isag.cat3g.com/api/api.otp.gw.php
+  sms_url: http://cp.server.com/recv.dr.php
+  sms_sussd_url: http://isag.cat3g.com/api/api.smsussd.php
+
+kh:
+  cellcard:
+    sdp_author_url: https://api-jwt.fortumo.io/authorisations
+    sdp_payment_url: https://api-jwt.fortumo.io/payments
+    sp_payment_callback_url: https://rpsmapi.uarocky.com/renren-api/cambodia/wap/paymentsCallback
+    sp_pin_callback_url: https://rpsmapi.uarocky.com/renren-api/cambodia/wap/getPINCallBack
+    sp_he_callback_url: https://rpsmapi.uarocky.com/renren-api/cambodia/wap/getHECallBack
+    sp_merchant_id: 05845cae3eb2470c6e2ced320b253921
+    sdp_refunds_url: https://api-jwt.fortumo.io/refunds
+    sp_refunds_callback_url: https://rpsmapi.uarocky.com/renren-api/cambodia/wap/unsub/refundsCallBack
+    sdp_sending_messages_url: https://messaging-jwt.fortumo.io/messaging
+    sp_sending_messages_callback_url: https://rpsmapi.uarocky.com/renren-api/cambodia/sms/smsCallback
+    sp_unsub_callback_url: https://rpsmapi.uarocky.com/renren-api/cambodia/wap/unsub/terminateCallBack

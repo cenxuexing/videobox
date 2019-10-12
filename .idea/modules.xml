@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="ProjectModuleManager">
+    <modules>
+      <module fileurl="file://$PROJECT_DIR$/renren-api/renren-api.iml" filepath="$PROJECT_DIR$/renren-api/renren-api.iml" />
+      <module fileurl="file://$PROJECT_DIR$/renren-common/renren-common.iml" filepath="$PROJECT_DIR$/renren-common/renren-common.iml" />
+      <module fileurl="file://$PROJECT_DIR$/renren-security.iml" filepath="$PROJECT_DIR$/renren-security.iml" />
+      <module fileurl="file://$PROJECT_DIR$/renren-sms/renren-sms.iml" filepath="$PROJECT_DIR$/renren-sms/renren-sms.iml" />
+      <module fileurl="file://$PROJECT_DIR$/renren-utils/renren-utils.iml" filepath="$PROJECT_DIR$/renren-utils/renren-utils.iml" />
+    </modules>
+  </component>
+</project>

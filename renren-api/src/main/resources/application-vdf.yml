@@ -1,0 +1,100 @@
+spring:
+  datasource:
+    type: com.alibaba.druid.pool.DruidDataSource
+    driverClassName: com.mysql.jdbc.Driver
+    druid:
+      url: jdbc:mysql://global.cfefxclzcgeq.ap-south-1.rds.amazonaws.com:3306/renren_security?allowMultiQueries=true&useUnicode=true&characterEncoding=UTF-8&useSSL=false
+      username: Global_admin
+      password: jb7G4e09TanR
+      initial-size: 1
+      min-idle: 1
+      max-active: 10
+      max-wait: 60000
+      pool-prepared-statements: true
+      max-pool-prepared-statement-per-connection-size: 20
+      time-between-eviction-runs-millis: 60000 
+      min-evictable-idle-time-millis: 300000
+      validation-query: SELECT 1 FROM DUAL
+      test-while-idle: true
+      test-on-borrow: false
+      test-on-return: false
+      stat-view-servlet:
+        enabled: true
+        url-pattern: /druid/*
+        #login-username: admin
+        #login-password: admin
+      filter:
+        stat:
+          log-slow-sql: true
+          slow-sql-millis: 1000
+          merge-sql: false
+        wall:
+          config:
+            multi-statement-allow: true
+  redis:
+    database: 1
+    host: 127.0.0.1
+    port: 6379
+    password:  # 密码（默认为空）
+    timeout: 6000ms  # 连接超时时长（毫秒）
+    ssl: false
+    jedis:
+      pool:
+        max-active: 1000  # 连接池最大连接数（使用负值表示没有限制）
+        max-wait: -1ms    # 连接池最大阻塞等待时间（使用负值表示没有限制）
+        max-idle: 10      # 连接池中的最大空闲连接
+        min-idle: 5       # 连接池中的最小空闲连接
+
+  lifecell:
+    activitionUrl: http://www.baidu.com/perClick #订阅的URL
+    deactivationUrl: http://www.baidu.com/perClickDeact #取消的URL
+    checkActionUrl: http://www.baidu.com/perClick #检查用户是否订阅URL
+    perCheckInfo: http://www.baidu.com/perClickInfo #380XXXXXXXXX
+    secretKey: k8xuEkxFRodkhl9NCxny5lLTBnp2UY5DIUOmmbLMFASFHVIP
+    partnerCode: 37
+    accesskey: 44
+    returnUrl: http://uapay.uarocky.com/api/lifecell/callback?productOrderCode=%s&userUnique=%s
+
+  smarttel:
+    #Nepal Smart Billing
+    #nepal_smart_billing_user_name: Deduct
+    #nepal_smart_billing_pwd: zsmart1
+    nepal_smart_billing_user_name: rockym
+    nepal_smart_billing_pwd: r*r?5?Nb
+    nepal_smart_channel_id: RockyMobi
+    nepal_smart_acct_res_code: 1
+    #nepal_smart_soap_url: http://10.12.30.201:8089/services/AccountService.AccountServiceHttpSoap12Endpoint/
+    nepal_smart_soap_url: http://10.12.30.18:8089/services/AccountService.AccountServiceHttpSoap12Endpoint/
+    smpp:
+      smpp_host: 10.12.51.27
+      smpp_post: 5016
+      smpp_uname: RockyMobi
+      smpp_pwd: r0ckY$tL
+      smpp_from_code: 9774265
+
+
+  #bsnl-south
+  india:
+    bsnl-south_cgUrl: http://bsnlsouth.netxcell.com:6767/WEBWAP2/interface/cg
+    bsnl-south_cpId: 209
+    bsnl-south_authKey: panshi
+
+    #bsnl-west
+    bsnl-west_cgUrl: http://bsnlwest.netxcell.com:6767/WEBWAP2/interface/cg
+    bsnl-west_CVPSCallback: http://bsnlwest.netxcell.com:12443/URL
+    bsnl-west_cpId: 226
+    bsnl-west_authKey: panshi
+
+    #bsnl-north
+    bsnl-north_cgValiUrl: http://218.248.82.180:20020/cvps/ConsentRequestAction
+    bsnl-north_cgPageUrl: http://10.147.225.100:80/cvpscw/WapConsentAction
+    bsnl-north_cpId: 1101
+
+    #bsnl-east
+    bsnl-east_cgValiUrl: http://218.248.71.20:20020/cvps/ConsentRequestAction
+    bsnl-east_cgPageurl: http://10.210.11.22:80/cvpscw/WapConsentAction
+    bsnl-east_cpId: 2089
+
+    #bsnl India payproxy_server domain
+    bsnl_payproxy_domain: http://inbsnl.stayrocky.com/renren-api-bsnl
+    

@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Insert title here</title>
+<script type="text/javascript" src="jquery.min.js"></script>
+
+</head>
+<body>
+	<button id="btnSend" type="button" >Try it</button>
+	<div id="request-process-patent"></div>
+</body>
+
+<script type="text/javascript">
+	$("#btnSend").click(function() {
+		$("#request-process-patent").html("正在提交数据，请勿关闭当前窗口...");
+		$.ajax({
+			type : "POST",
+			// url : "http://10.0.21.4:8081/renren-api/productOrder/createProductOrder",
+			url : "http://localhost:8081/renren-api/productOrder/createProductOrder",
+			contentType : "application/json; charset=utf-8",
+			data : JSON.stringify(GetJsonData()),
+			dataType : "json",
+			success : function(message) {
+				if (message > 0) {
+					alert("请求已提交！我们会尽快与您取得联系");
+				}
+			},
+			error : function(message) {
+				$("#request-process-patent").html("提交数据失败！");
+			}
+		});
+	});
+
+	function GetJsonData() {
+		var json = {
+			"merchantCode" : "M20181106000001",
+			"operatorCode" : "VDF",
+			"productCode" : "GAMEBOX_MONTHLYY"
+		};
+		return json;
+	}
+</script>
+</html>

@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<configuration>
+
+	<include resource="org/springframework/boot/logging/logback/defaults.xml" />
+	<include resource="org/springframework/boot/logging/logback/console-appender.xml" />
+
+	<appender name="CONSOLE" class="ch.qos.logback.core.ConsoleAppender">
+		<layout class="ch.qos.logback.classic.PatternLayout">
+			<pattern>%d{yyyy-MM-dd HH:mm:ss.SSS} [%-5level] [%thread] [%file:%line] [%logger{80}] [%r ms] -> %msg%n</pattern>
+		</layout>
+	</appender>
+
+	<appender name="LOG_INFO" class="ch.qos.logback.core.rolling.RollingFileAppender">
+		<File>${LOG_PATH}${LOG_FILE}</File>
+		<append>true</append>
+		<rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+			<fileNamePattern>${LOG_PATH}/daily-%d{yyyy-MM-dd}/${LOG_FILE}-%d{yyyy-MM-dd}.log.%i.bak</fileNamePattern>
+			<timeBasedFileNamingAndTriggeringPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedFNATP">
+				<maxFileSize>500MB</maxFileSize>
+			</timeBasedFileNamingAndTriggeringPolicy>
+		</rollingPolicy>
+		<encoder>
+			<charset>UTF-8</charset>
+			<pattern>%d{yyyy-MM-dd HH:mm:ss.SSS} [%-5level] [%thread] [%file:%line] [%logger{80}] [%r ms] -> %msg%n</pattern>
+		</encoder>
+	</appender>
+
+	<!-- 修改日志为异步打印，提高性能 -->
+	<appender name="ASYNC_LOG_INFO" class="ch.qos.logback.classic.AsyncAppender">
+		<discardingThreshold>0</discardingThreshold>	<!-- 不丢失日志.默认的,如果队列的80%已满,则会丢弃TRACT、DEBUG、INFO级别的日志 -->
+		<queueSize>1234</queueSize>	<!-- 更改默认的队列的深度,该值会影响性能.默认值为256 -->
+		<appender-ref ref="LOG_INFO" />	<!-- 添加附加的appender,最多只能添加一个 -->
+	</appender>
+	
+	<appender name="LOG_INFO_PH" class="ch.qos.logback.core.rolling.RollingFileAppender">
+		<File>${LOG_PATH}npst-${LOG_FILE}</File>
+		<append>true</append>
+		<rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+			<fileNamePattern>${LOG_PATH}/daily-%d{yyyy-MM-dd}/npst-${LOG_FILE}-%d{yyyy-MM-dd}.log.%i.bak</fileNamePattern>
+			<timeBasedFileNamingAndTriggeringPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedFNATP">
+				<maxFileSize>50MB</maxFileSize>
+			</timeBasedFileNamingAndTriggeringPolicy>
+		</rollingPolicy>
+		<encoder>
+			<charset>UTF-8</charset>
+			<pattern>%d{yyyy-MM-dd HH:mm:ss.SSS} [%-5level] [%thread] [%file:%line] [%logger{80}] [%r ms] -> %msg%n</pattern>
+		</encoder>
+	</appender>
+
+	<appender name="LOG_ERROR" class="ch.qos.logback.core.rolling.RollingFileAppender">
+		<filter class="ch.qos.logback.classic.filter.LevelFilter">
+			<level>ERROR</level>
+			<OnMismatch>DENY</OnMismatch>
+			<OnMatch>ACCEPT</OnMatch>
+		</filter>
+		<File>${LOG_PATH}${LOG_FILE}.error</File>
+		<append>true</append>
+		<rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+			<fileNamePattern>${LOG_PATH}/daily-%d{yyyy-MM-dd}/${LOG_FILE}.error-%d{yyyy-MM-dd}.log.%i.bak</fileNamePattern>
+			<timeBasedFileNamingAndTriggeringPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedFNATP">
+				<maxFileSize>500MB</maxFileSize>
+			</timeBasedFileNamingAndTriggeringPolicy>
+		</rollingPolicy>
+		<encoder>
+			<charset>UTF-8</charset>
+			<pattern>%d{yyyy-MM-dd HH:mm:ss.SSS} [%-5level] [%thread] [%file:%line] [%logger{80}] [%r ms] -> %msg%n</pattern>
+		</encoder>
+	</appender>
+	
+	<!-- 修改日志为异步打印，提高性能 -->
+	<appender name="ASYNC_LOG_ERROR" class="ch.qos.logback.classic.AsyncAppender">
+		<discardingThreshold>0</discardingThreshold>	<!-- 不丢失日志.默认的,如果队列的80%已满,则会丢弃TRACT、DEBUG、INFO级别的日志 -->
+		<queueSize>1234</queueSize>	<!-- 更改默认的队列的深度,该值会影响性能.默认值为256 -->
+		<appender-ref ref="LOG_ERROR" />	<!-- 添加附加的appender,最多只能添加一个 -->
+	</appender>
+	
+
+	<logger name="dao" level="DEBUG" />
+	
+	<logger name="io.renren.api.rockmobi.payment.ph" level="DEBUG">
+        <appender-ref ref="LOG_INFO_PH"/>
+    </logger>
+    
+
+	<root level="INFO">
+		<appender-ref ref="CONSOLE" />
+		<appender-ref ref="ASYNC_LOG_INFO" />
+		<appender-ref ref="ASYNC_LOG_ERROR" />
+	</root>
+</configuration>

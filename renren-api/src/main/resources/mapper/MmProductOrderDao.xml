@@ -1,0 +1,204 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="io.renren.dao.MmProductOrderDao">
+
+	<select id="getUserAvailableOrder" resultType="io.renren.entity.MmProductOrderEntity">
+		SELECT
+			t.*
+		FROM
+			mm_product_order t
+		WHERE
+			1 = 1
+		AND t.product_id in (select id from mm_product where product_name = #{productName})
+		AND t.operator_id = #{operatorId}
+		AND t.merchant_id = #{merchantId}
+		AND t.order_state = #{orderState}
+		AND t.user_phone = #{userPhone}
+		AND t.expire_date > #{dateNow}
+		AND t.is_available = 1
+		<if test="orderTypeList != null">
+			AND t.order_type in 
+    		<foreach item="item" collection="orderTypeList" separator="," open="(" close=")" index="">
+				#{item}
+			</foreach>
+		</if>
+		ORDER BY t.expire_date DESC
+	</select>
+
+	<select id="getUserAvailableOrderByPhone" resultType="io.renren.entity.MmProductOrderEntity">
+		SELECT
+		t.*
+		FROM
+		mm_product_order t
+		WHERE
+		1 = 1
+		AND t.operator_id = #{operatorId}
+		AND t.merchant_id = #{merchantId}
+		AND t.order_state = #{orderState}
+		AND t.user_phone = #{userPhone}
+		AND t.expire_date > #{dateNow}
+		AND t.is_available = 1
+		<if test="orderTypeList != null">
+			AND t.order_type in
+			<foreach item="item" collection="orderTypeList" separator="," open="(" close=")" index="">
+				#{item}
+			</foreach>
+		</if>
+		ORDER BY t.expire_date DESC
+	</select>
+	
+	
+		<select id="getExpireUserByOperatorId" resultType="io.renren.entity.MmProductOrderEntity">
+		select a.* from mm_product_order a where a.id in (select max(id) from mm_product_order 
+			where operator_id = #{operatorId} 
+			<if test="orderTypeList != null">
+				AND order_type in 
+    			<foreach item="typeItem" collection="orderTypeList" separator="," open="(" close=")" index="">
+					#{typeItem}
+				</foreach>
+			</if>
+			<if test="orderStatusList != null">
+				AND order_state in 
+    			<foreach item="statusItem" collection="orderStatusList" separator="," open="(" close=")" index="">
+					#{statusItem}
+				</foreach>
+			</if>
+			AND expire_date &gt;= #{dataNow} AND expire_date &lt; DATE_ADD(#{dataNow},INTERVAL 1 DAY) 
+			AND is_available = 1 GROUP BY user_phone) AND a.is_available = 1 and a.operator_id = #{operatorId} 
+	</select>
+	
+	<select id="getUserLastAction" resultType="io.renren.entity.MmProductOrderEntity">
+		select * from mm_product_order where id = 
+			(select max(id) from mm_product_order 
+			WHERE create_time &gt; #{createDate}    
+			AND create_time &lt; #{expireDate} 
+			AND user_phone = #{userPhone}
+			AND operator_id = #{operatorId} 
+			AND merchant_id = #{merchantId} 
+			AND order_type = 2
+			AND order_state = 5
+			AND is_available = 1)
+	</select>
+	
+	
+	<select id="getMaxValidDataByUserPhoneAndOrderTypeAndOrderStatus" 
+		resultType="io.renren.entity.MmProductOrderEntity">
+		SELECT A.* FROM mm_product_order A,
+			(SELECT MAX(id) max_id FROM mm_product_order 
+				where user_phone = #{userPhone} and expire_date > now()
+			
+			<if test="operatorId != null">
+				AND operator_id = #{operatorId}
+			</if>
+			<if test="productId != null">
+				AND product_id = #{productId}
+			</if>
+			<if test="orderTypeList != null">
+				AND order_type in 
+    			<foreach item="typeItem" collection="orderTypeList" separator="," open="(" close=")" index="">
+					#{typeItem}
+				</foreach>
+			</if>
+			<if test="orderStatusList != null">
+				AND order_state in 
+    			<foreach item="statusItem" collection="orderStatusList" separator="," open="(" close=")" index="">
+					#{statusItem}
+				</foreach>
+			</if>
+			) B WHERE A.id = B.max_id 
+	</select>
+
+
+	<select id="getUserLastOperationByUserPhoneAndOrderTypeAndOrderStatus" 
+		resultType="io.renren.entity.MmProductOrderEntity">
+		SELECT A.* FROM mm_product_order A,
+			(SELECT MAX(id) max_id FROM mm_product_order 
+				where user_phone = #{userPhone} 
+			<if test="operatorId != null">
+				AND operator_id = #{operatorId}
+			</if>
+			<if test="productId != null">
+				AND product_id = #{productId}
+			</if>
+			<if test="orderTypeList != null">
+				AND order_type in 
+    			<foreach item="typeItem" collection="orderTypeList" separator="," open="(" close=")" index="">
+					#{typeItem}
+				</foreach>
+			</if>
+			<if test="orderStatusList != null">
+				AND order_state in 
+    			<foreach item="statusItem" collection="orderStatusList" separator="," open="(" close=")" index="">
+					#{statusItem}
+				</foreach>
+			</if>
+			) B WHERE A.id = B.max_id 
+	</select>
+
+	<update id="updateByProductOrderCode" parameterType="io.renren.entity.MmProductOrderEntity" >
+		update mm_product_order 
+		<trim prefix="set" suffixOverrides="," >
+			<if test="productOrderEntity.orderState!=null">order_state=#{productOrderEntity.orderState},</if>
+			<if test="productOrderEntity.payEndTime!=null">pay_end_time=#{productOrderEntity.payEndTime},</if>
+			<if test="productOrderEntity.updateTime!=null">update_time=#{productOrderEntity.updateTime},</if>
+			<if test="productOrderEntity.updateBy!=null">update_by=#{productOrderEntity.updateBy},</if>
+			<if test="productOrderEntity.ext1!=null">ext1=#{productOrderEntity.ext1},</if>
+			<if test="productOrderEntity.ext2!=null">ext2=#{productOrderEntity.ext2},</if>
+			<if test="productOrderEntity.ext3!=null">ext3=#{productOrderEntity.ext3},</if>
+			<if test="productOrderEntity.expireDate!=null">expire_date=#{productOrderEntity.expireDate},</if>
+			<if test="productOrderEntity.thirdSerialId!=null">third_serial_id=#{productOrderEntity.thirdSerialId},</if>
+		</trim>
+		where product_order_code = #{productOrderCode}
+	</update>
+	
+	<update id="updateExt12345ByProductOrderCode" >
+		update mm_product_order 
+		<trim prefix="set" suffixOverrides="," >
+			<if test="ext1!=null and ext1 != ''">ext1=#{ext1},</if>
+			<if test="ext2!=null and ext2 != ''">ext2=#{ext2},</if>
+			<if test="ext3!=null and ext3 != ''">ext3=#{ext3},</if>
+			<if test="ext4!=null and ext4 != ''">ext4=#{ext4},</if>
+			<if test="ext5!=null and ext5 != ''">ext5=#{ext5},</if>
+		</trim>
+		where product_order_code = #{productOrderCode}
+	</update>
+	
+	<update id="additionalExt12345ByProductOrderCode" >
+		update mm_product_order 
+		<trim prefix="set" suffixOverrides="," >
+			<if test="ext1!=null and ext1 != ''">ext1=CONCAT(ext1,#{ext1}),</if>
+			<if test="ext2!=null and ext2 != ''">ext2=CONCAT(ext2,#{ext2}),</if>
+			<if test="ext3!=null and ext3 != ''">ext3=CONCAT(ext3,#{ext3}),</if>
+			<if test="ext4!=null and ext4 != ''">ext4=CONCAT(ext4,#{ext4}),</if>
+			<if test="ext5!=null and ext5 != ''">ext5=CONCAT(ext5,#{ext5}),</if>
+		</trim>
+		where product_order_code = #{productOrderCode}
+	</update>
+	
+    <select id="totalSubscriptionAmountByToday" parameterType="string" resultType="decimal">
+		select sum(practical_price) from mm_product_order
+		<where>
+			order_state = 3 and order_type in (0,1) and to_days(create_time) = to_days(now())
+			<if test="productOrderCode != null">
+				and product_order_code = #{productOrderCode}
+			</if>
+		</where>
+	</select>
+	
+	<select id="queryUnsubOrderByEffectiveOrder" resultType="io.renren.entity.MmProductOrderEntity">
+		select * from mm_product_order where order_state = 5 and order_type = 2 and operator_id=#{operatorId} and user_phone=#{userPhone} and ext4 = #{ext4}
+	</select>
+
+	<select id="getParkingOrders" resultType="io.renren.entity.MmProductOrderEntity">
+		select * from mm_product_order
+		WHERE operator_id = #{operatorId}
+		AND (pay_start_time BETWEEN #{settleStartDate} AND #{settleEndDate})
+		AND order_type in(0,1) AND order_state = #{orderStatus}
+		<if test="userPhone != null">
+			AND user_phone = #{userPhone}
+		</if>
+		AND is_available = 1 ORDER BY pay_start_time DESC
+	</select>
+
+</mapper>

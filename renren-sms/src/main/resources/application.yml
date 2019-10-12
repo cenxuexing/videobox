@@ -1,0 +1,89 @@
+# Tomcat
+server:
+  tomcat:
+    uri-encoding: UTF-8
+    max-threads: 1000
+    min-spare-threads: 30
+  port: 8900
+  servlet:
+    context-path: /renren-sms
+
+# mysql
+spring:
+  secretkey: 13d364ede75a4da69d13bee9c645381b
+  application:
+    name: renren-sms
+  # 环境 dev|test|prod
+  profiles:
+    active: dev
+  jackson:
+    date-format: yyyy-MM-dd HH:mm:ss
+    time-zone: GMT+8
+    serialization:
+      indent-output: true
+  servlet:
+    multipart:
+      max-file-size: 100MB
+      max-request-size: 100MB
+      enabled: true
+  taskpool:
+    #线程池维护线程的最少数量
+    corePoolSize: 5
+    #允许的空闲时间
+    keepAliveSeconds: 0
+    #线程池维护线程的最大数量
+    maxPoolSize: 200
+    #缓存队列
+    queueCapacity: 1023
+
+  rabbitmq:
+    host: 192.168.40.183
+    port: 5672
+    username: testrenren
+    password: 123456
+    virtual-host: /
+
+renren:
+  redis:
+    open: true  # 是否开启redis缓存  true开启   false关闭
+  shiro:
+    redis: true # true表示shiro session存到redis里，需要开启redis，才会生效【分布式场景】
+
+#mybatis
+mybatis-plus:
+  mapper-locations: classpath*:mapper/**/*.xml
+  #实体扫描，多个package用逗号或者分号分隔
+  typeAliasesPackage: io.renren.sms.model
+  global-config:
+    #主键类型  0:"数据库ID自增", 1:"用户输入ID",2:"全局唯一ID (数字类型唯一ID)", 3:"全局唯一ID UUID";
+    id-type: 0
+    #字段策略 0:"忽略判断",1:"非 NULL 判断"),2:"非空判断"
+    field-strategy: 2
+    #驼峰下划线转换
+    db-column-underline: true
+    #刷新mapper 调试神器
+    refresh-mapper: true
+    #数据库大写下划线转换
+    #capital-mode: true
+    #序列接口实现类配置
+    #key-generator: com.baomidou.springboot.xxx
+    #逻辑删除配置
+    logic-delete-value: -1
+    logic-not-delete-value: 0
+    #自定义填充策略接口实现
+    #meta-object-handler: com.baomidou.springboot.xxx
+    #自定义SQL注入器
+    sql-injector: com.baomidou.mybatisplus.mapper.LogicSqlInjector
+  configuration:
+    map-underscore-to-camel-case: true
+    cache-enabled: false
+    call-setters-on-nulls: true
+
+logging:
+  level: debug
+  level.io.renren: debug
+  level.io.renren.feign: debug
+  path: logs/sms/
+  file: sms.log
+
+

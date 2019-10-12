@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="io.renren.dao.MmChannelDao">
+
+	
+	<!-- 可根据自己的需求，是否要使用 -->
+    <resultMap type="io.renren.entity.MmChannelEntity" id="tChannelMap">
+        <result property="id" column="id"/>
+        <result property="offerId" column="offer_id"/>
+        <result property="offerName" column="offer_name"/>
+        <result property="previewLink" column="preview_link"/>
+        <result property="pricingModel" column="pricing_model"/>
+        <result property="payout" column="payout"/>
+        <result property="cap" column="cap"/>
+        <result property="targetingGeo" column="targeting_geo"/>
+        <result property="carrier" column="carrier"/>
+        <result property="trackingLink" column="tracking_link"/>
+        <result property="deviceType" column="device_type"/>
+        <result property="trafficSources" column="traffic_sources"/>
+        <result property="trackingType" column="tracking_type"/>
+        <result property="conversionFlow" column="conversion_flow"/>
+        <result property="approvalForPublisherCreatives" column="approval_for_publisher_creatives"/>
+        <result property="returnsTheLink" column="returns_the_link"/>
+        <result property="channelCode" column="channel_code"/>
+    </resultMap>
+
+	<select id="getByOperatorAndChannel" resultType="io.renren.entity.MmChannelEntity" >
+		select * from t_channel where  carrier = #{operatorCode} and channel_code = #{channelCode}
+	</select>
+	
+	<select id="getByOperatorCode" resultType="io.renren.entity.MmChannelEntity" >
+		select * from t_channel where carrier = #{operatorCode}
+	</select>
+
+
+
+
+</mapper>

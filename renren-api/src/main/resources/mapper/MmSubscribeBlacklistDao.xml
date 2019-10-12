@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="io.renren.dao.MmSubscribeBlacklistDao">
+
+	<!-- 可根据自己的需求，是否要使用 -->
+    <resultMap type="io.renren.entity.MmSubscribeBlacklistEntity" id="mmSubscribeBlacklistMap">
+        <result property="id" column="id"/>
+        <result property="language" column="language"/>
+        <result property="merchantCode" column="merchant_code"/>
+        <result property="operatorCode" column="operator_code"/>
+        <result property="userPhone" column="user_phone"/>
+        <result property="shieldType" column="shield_type"/>
+        <result property="ext1" column="ext1"/>
+        <result property="ext2" column="ext2"/>
+        <result property="ext3" column="ext3"/>
+        <result property="createTime" column="create_time"/>
+        <result property="updateTime" column="update_time"/>
+        <result property="creatorId" column="creator_id"/>
+        <result property="modifierId" column="modifier_id"/>
+        <result property="isAvailable" column="is_available"/>
+    </resultMap>
+
+	
+	<select id="getByOperatorCodeAndMerchantCodeAndCountry" resultType="io.renren.entity.MmSubscribeBlacklistEntity">
+		select * from mm_subscribe_blacklist where language = #{language} 
+		and merchant_code = #{merchantCode} and operator_code = #{operatorCode} and is_available = 1
+	</select>
+
+
+</mapper>
