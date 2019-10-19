@@ -146,6 +146,7 @@ public class PhPayServiceImpl implements PhPayService {
 		String requestXml = MessageAssemblyUtil.buildSoap(mapHead, mapBody, PhApiTypeEnum.SUBSCRIBE.getCode(), null);
 		LoggerUtils.info(LOGGER, "菲律宾订阅请求参数：" + requestXml);
 		String result = HttpUtil.doPostSoap1_1(wapSubUrl, requestXml,"");
+		LoggerUtils.info(LOGGER, "菲律宾订阅请求参数返回结果：" + result);
 
         if(!StringUtils.isEmpty(result)){
 			return JSONObject.parseObject(result, PhResultResponse.class);
