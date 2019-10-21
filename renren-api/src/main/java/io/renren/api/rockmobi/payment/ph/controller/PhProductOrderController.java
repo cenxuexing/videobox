@@ -202,7 +202,7 @@ public class PhProductOrderController {
 	 */
 	@PostMapping("/api/unSub")
 	@ApiOperation(value = "菲律宾发起取消订阅请求", response = PhProductOperAtorBO.class)
-	public R unSubscribeProduct(){
+	public R unSubscribeProduct(String phoneNumber){
 		String timeStamp = DateUtils.format(new Date(), DateUtils.DATE_TIME1_PATTERN);
 		String phPassword = DigestUtils.md5Hex("008400" + "G2fhAaiX" + timeStamp);
 		String str = "<soapenv:Envelope xmlns:soapenv='http://schemas.xmlsoap.org/soap/envelope/' xmlns:loc='http://www.csapi.org/schema/parlayx/subscribe/manage/v1_0/local'><soapenv:Header>\n" +
@@ -217,7 +217,7 @@ public class PhProductOrderController {
 				"<loc:unSubscribeProductRequest>\n" +
 				"<loc:unSubscribeProductReq>\n" +
 				"<userID>\n" +
-				"<ID>09612444042</ID>\n" +
+				"<ID>"+phoneNumber+"</ID>\n" +
 				"<type>0</type>\n" +
 				"</userID>\n" +
 				"<subInfo>\n" +
