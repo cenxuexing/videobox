@@ -128,7 +128,7 @@ public class PhPayServiceImpl implements PhPayService {
 		//用户类型 0：手机号
 		mapBody.put(SUBSCRIBE_PRODUCT_REQ + ".userID.type", 0);
 		//产品ID
-		mapBody.put(SUBSCRIBE_PRODUCT_REQ + ".subInfo.productID", 1000016205);//productConfigMap.getString("productId"));
+		mapBody.put(SUBSCRIBE_PRODUCT_REQ + ".subInfo.productID", merchantProductOperAtorBo.getProductCode());//productConfigMap.getString("productId"));
 		//语言简写
 		//mapBody.put(SUBSCRIBE_PRODUCT_REQ + ".subInfo.operCode", "EN");
 		//是否自动更新订阅关系 0：不更新 1：更新
