@@ -144,6 +144,7 @@ public class PhPayServiceImpl implements PhPayService {
 		//mapBody.put(SUBSCRIBE_PRODUCT_REQ + ".subInfo.extensionInfo.namedParameters.value", "sub");
 
 		String requestXml = MessageAssemblyUtil.buildSoap(mapHead, mapBody, PhApiTypeEnum.SUBSCRIBE.getCode(), null);
+		LoggerUtils.info(LOGGER, "菲律宾订阅请求参数地址：" + wapSubUrl);
 		LoggerUtils.info(LOGGER, "菲律宾订阅请求参数：" + requestXml);
 		String result = HttpUtil.doPostSoap1_1(wapSubUrl, requestXml,"");
 		LoggerUtils.info(LOGGER, "菲律宾订阅请求参数返回结果：" + result);
