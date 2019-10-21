@@ -317,10 +317,10 @@ public class PhProductOrderController {
 	 */
 	@PostMapping("/api/individual/inbound/sms")
 	@ApiOperation(value = "菲律宾取消对MO SMS消息通知的订阅请求", response = PhProductOperAtorBO.class)
-	public R individualInboundSmsCertification(HttpServletRequest req) {
+	public R individualInboundSmsCertification(String phoneNp,HttpServletRequest req) {
 		//LoggerUtils.info(LOGGER, "发起订阅任务开始:" + JSON.toJSONString(subscriptionId) + " " + req);
 		//phPayService.
-		String str = phPayService.individualInboundSmsCertification("http://125.60.148.174:8312/1/smsmessaging/inbound/subscriptions/10001906140419500001227700");
+		String str = phPayService.individualInboundSmsCertification("http://125.60.148.174:8312/1/smsmessaging/inbound/subscriptions/10001906140419500001227700",phoneNp);
 		return R.ok().put("data", str);
 	}
 
