@@ -28,7 +28,7 @@ public interface PhPayService {
 	 * 入站SMS消息订阅
 	 * @return
 	 */
-	String inboundSmsSub();
+	String inboundSmsSub(String phoneNo);
 
 	/**
 	 * 取消订阅请求
@@ -42,7 +42,7 @@ public interface PhPayService {
 	 * @return
 	 * @throws Exception
 	 */
-	String inboundSubscriptions() throws Exception;
+	String inboundSubscriptions(String phoneNo) throws Exception;
 
 	/**
 	 * 订单同步回传

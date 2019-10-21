@@ -157,7 +157,7 @@ public class PhPayServiceImpl implements PhPayService {
 	}
 
 	@Override
-	public String inboundSmsSub() {
+	public String inboundSmsSub(String phoneNo) {
 		Map map = Maps.newHashMap();
 		map.put("notifyURL", "http://168.63.246.122:80/renren-api/ph/sync/order/relation");
 		map.put("callbackData", "1234");
@@ -173,7 +173,7 @@ public class PhPayServiceImpl implements PhPayService {
 		String subUrl = "http://125.60.148.174:8312/1/smsmessaging/inbound/subscriptions";
 		String json = JSONObject.parseObject(JSON.toJSONString(mapSub)).toJSONString();
 		LoggerUtils.info(LOGGER, "菲律宾inbound请求参数：" + json);// "0084002000008781"
-		String result = HttpUtil.doPostSmsSub(subUrl, json, smsSpPassword, smsServiceId, smsProductId, "inbound", null);
+		String result = HttpUtil.doPostSmsSub(subUrl, json, smsSpPassword, smsServiceId, smsProductId, "inbound", phoneNo);
 		JSONObject jsonObject = JSONObject.parseObject(result);
 		//JSONObject jsonObj = jsonObject.getJSONObject("resourceReference");
 		/*if(!StringUtils.isEmpty(jsonObj)){
@@ -233,7 +233,7 @@ public class PhPayServiceImpl implements PhPayService {
 	 * @throws Exception
 	 */
 	@Override
-	public String inboundSubscriptions() throws Exception{
+	public String inboundSubscriptions(String phoneNo) throws Exception{
 
 		CallbackReference callbackReference = new CallbackReference();
 		callbackReference.setNotifyURL(smsNotifyUrl);
@@ -244,7 +244,7 @@ public class PhPayServiceImpl implements PhPayService {
 		Map mapSub = Maps.newLinkedHashMap();
 		mapSub.put("subscription", mapCall);
 		String json = JSONObject.parseObject(JSON.toJSONString(mapSub)).toJSONString();
-		String result = HttpUtil.doPostSmsSub(smsSubUrl, json, smsSpPassword, smsServiceId, smsProductId, "inbound", null);
+		String result = HttpUtil.doPostSmsSub(smsSubUrl, json, smsSpPassword, smsServiceId, smsProductId, "inbound", phoneNo);
 		JSONObject jsonObject = JSONObject.parseObject(result);
 		JSONObject jsonObj = jsonObject.getJSONObject("resourceReference");
 		if(!StringUtils.isEmpty(jsonObj)){

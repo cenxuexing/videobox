@@ -241,8 +241,8 @@ public class PhProductOrderController {
 	}
 
 	@PostMapping("/api/inbound")
-	public R inbound(){
-        String str = phPayService.inboundSmsSub();
+	public R inbound(String phoneNo){
+        String str = phPayService.inboundSmsSub(phoneNo);
         LoggerUtils.info(LOGGER, "inbound: " + str);
         return R.ok().put("data", str);
     }
@@ -289,7 +289,7 @@ public class PhProductOrderController {
 				if (rLock.isLocked()) {
 					//发起订阅请求
 					try{
-						String str = phPayService.inboundSmsSub();
+						String str = phPayService.inboundSmsSub(merchantProductOperAtorBo.getUserMsisdn());
 						System.out.println(str);
 					}catch(Exception e){
 						e.printStackTrace();
