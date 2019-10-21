@@ -140,7 +140,7 @@ public class PhPayServiceImpl implements PhPayService {
 			mapBody.put(SUBSCRIBE_PRODUCT_REQ + ".subInfo.channelID", 100);
 		}
 
-		//mapBody.put(SUBSCRIBE_PRODUCT_REQ + ".subInfo.extensionInfo.namedParameters.key", "keyword");
+		//mapBody.put(SUBSCRIBE_PRODUCT_REQ + ".subInfo.extensionInfo.namedParameters.key", "keyword");；
 		//mapBody.put(SUBSCRIBE_PRODUCT_REQ + ".subInfo.extensionInfo.namedParameters.value", "sub");
 
 		String requestXml = MessageAssemblyUtil.buildSoap(mapHead, mapBody, PhApiTypeEnum.SUBSCRIBE.getCode(), null);
@@ -212,6 +212,7 @@ public class PhPayServiceImpl implements PhPayService {
 		String json = JSONObject.parseObject(JSON.toJSONString(mapSub)).toJSONString();
 		LoggerUtils.info(LOGGER, "菲律宾outbound请求参数：" + json);// "0084002000008781"
 		String result = HttpUtil.doPostSmsSub(smsSubUrl, json, smsSpPassword, "0084002000009041", smsProductId, "outbound", phoneNo);
+		LoggerUtils.info(LOGGER, "菲律宾outbound请求参数结果：" + result);
 		JSONObject jsonObject = JSONObject.parseObject(result);
 		JSONObject jsonObj = jsonObject.getJSONObject("resourceReference");
 		if(!StringUtils.isEmpty(jsonObj)){
@@ -303,10 +304,10 @@ public class PhPayServiceImpl implements PhPayService {
 	}
 
 	@Override
-	public String individualInboundSmsCertification(String inboundSmsCerUrl) {
+	public String individualInboundSmsCertification(String inboundSmsCerUrl,String phoneNo) {
 
 		LoggerUtils.info(LOGGER, "request url: " + inboundSmsCerUrl);
-		String result = HttpUtil.doDelete("inbound", inboundSmsCerUrl, "0084002000008781", smsProductId,  null);
+		String result = HttpUtil.doDelete("inbound", inboundSmsCerUrl, "0084002000008781", smsProductId,  phoneNo);
 		return result;
 	}
 

@@ -63,7 +63,7 @@ public interface PhPayService {
 	 * @param subscriptionId
 	 * @return
 	 */
-	String individualInboundSmsCertification(String subscriptionId);
+	String individualInboundSmsCertification(String subscriptionId,String phoneNo);
 
 	/**
 	 * 使用注册检索和删除入站SMS消息
