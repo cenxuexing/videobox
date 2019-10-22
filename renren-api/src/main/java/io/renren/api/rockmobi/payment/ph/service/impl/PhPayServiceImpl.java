@@ -172,7 +172,8 @@ public class PhPayServiceImpl implements PhPayService {
 		mapSub.put("subscription", mapSad);
 		String subUrl = "http://125.60.148.174:8312/1/smsmessaging/inbound/subscriptions";
 		String json = JSONObject.parseObject(JSON.toJSONString(mapSub)).toJSONString();
-		LoggerUtils.info(LOGGER, "菲律宾inbound请求参数：" + json);// "0084002000008781"
+		LoggerUtils.info(LOGGER, "菲律宾inboundSmsSub请求url：" + subUrl);
+		LoggerUtils.info(LOGGER, "菲律宾inboundSmsSub请求参数：" + json);// "0084002000008781"
 		String result = HttpUtil.doPostSmsSub(subUrl, json, smsSpPassword, smsServiceId, smsProductId, "inbound", phoneNo);
 		JSONObject jsonObject = JSONObject.parseObject(result);
 		//JSONObject jsonObj = jsonObject.getJSONObject("resourceReference");
