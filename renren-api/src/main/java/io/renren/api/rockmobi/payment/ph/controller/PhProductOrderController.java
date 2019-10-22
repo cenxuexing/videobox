@@ -291,7 +291,7 @@ public class PhProductOrderController {
 					try{
 						LoggerUtils.info(LOGGER, "用户 {" + userMsisdn + "}发起订阅请求.....");
 						String str = phPayService.inboundSmsSub(merchantProductOperAtorBo.getUserMsisdn());
-						LoggerUtils.info(LOGGER, "用户 {" + userMsisdn + "}订阅结果.....");
+						LoggerUtils.info(LOGGER, "用户 {" + userMsisdn + "}订阅结果....."+str);
 						System.out.println(str);
 					}catch(Exception e){
 						e.printStackTrace();
