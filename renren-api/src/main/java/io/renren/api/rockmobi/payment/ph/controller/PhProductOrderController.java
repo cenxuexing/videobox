@@ -196,7 +196,7 @@ public class PhProductOrderController {
 	}
 
 	/**
-	 * 菲律宾发起取消订阅请求
+	 * 菲律宾发起取消订阅请求(退订请求)
 	 * @param
 	 * @return
 	 */
@@ -289,7 +289,9 @@ public class PhProductOrderController {
 				if (rLock.isLocked()) {
 					//发起订阅请求
 					try{
+						LoggerUtils.info(LOGGER, "用户 {" + userMsisdn + "}发起订阅请求.....");
 						String str = phPayService.inboundSmsSub(merchantProductOperAtorBo.getUserMsisdn());
+						LoggerUtils.info(LOGGER, "用户 {" + userMsisdn + "}订阅结果.....");
 						System.out.println(str);
 					}catch(Exception e){
 						e.printStackTrace();
