@@ -128,7 +128,7 @@ public class PhPayServiceImpl implements PhPayService {
 		//用户类型 0：手机号
 		mapBody.put(SUBSCRIBE_PRODUCT_REQ + ".userID.type", 0);
 		//产品ID
-		mapBody.put(SUBSCRIBE_PRODUCT_REQ + ".subInfo.productID", merchantProductOperAtorBo.getProductCode());//productConfigMap.getString("productId"));
+		mapBody.put(SUBSCRIBE_PRODUCT_REQ + ".subInfo.productID", "1000016787");//productConfigMap.getString("productId"));
 		//语言简写
 		//mapBody.put(SUBSCRIBE_PRODUCT_REQ + ".subInfo.operCode", "EN");
 		//是否自动更新订阅关系 0：不更新 1：更新
@@ -165,7 +165,7 @@ public class PhPayServiceImpl implements PhPayService {
 		Map mapSad = Maps.newHashMap();
 		mapSad.put("callbackReference", map);
 		List<String> list = Lists.newArrayList();
-		list.add("2404124");
+		list.add("5840");
 		mapSad.put("destinationAddress", JSON.toJSON(list));
 		mapSad.put("criteria", "");
 		Map mapSub = Maps.newHashMap();
@@ -204,7 +204,7 @@ public class PhPayServiceImpl implements PhPayService {
 		list.add(phoneNo);
 		Map mapCall = Maps.newLinkedHashMap();
 		mapCall.put("address", JSON.toJSON(list));
-		mapCall.put("senderAddress", "2404124");
+		mapCall.put("senderAddress", "5840");
 		mapCall.put("receiptRequest", callbackReference);
 		mapCall.put("outboundSMSTextMessage", mapMsmText);
 		//mapCall.put("filterCriteria", "");
@@ -314,7 +314,7 @@ public class PhPayServiceImpl implements PhPayService {
 
 	@Override
 	public String inboundSmsRetrieveAndDel() {
-		String registrationId = "2404124";
+		String registrationId = "5840";
 		Map map = Maps.newHashMap();
 		map.put("maxBatchSize", 1);
 		map.put("retrievalOrder", "OldestFirst");

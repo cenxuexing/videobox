@@ -87,7 +87,7 @@ spring:
 ph:
   sm:
     sp_password: G2fhAaiX
-    sub_url: http://125.60.148.174:8312/1/smsmessaging/outbound/2404124/requests
+    sub_url: http://125.60.148.174:8312/1/smsmessaging/outbound/5840/requests
     notify_url: http://rpsmapi.uarocky.com/renren-api/ph/notify/client/delivery/status
     server_id: 0084002000008781
     product_id: 1000016205
