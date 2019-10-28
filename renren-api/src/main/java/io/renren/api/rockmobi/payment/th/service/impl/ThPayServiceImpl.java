@@ -271,6 +271,9 @@ public class ThPayServiceImpl implements ThPayService {
         LoggerUtils.error(LOGGER, "head:"+head);
 
         Map<String, Object> charge = Maps.newLinkedHashMap();
+        if(ticketid==null){
+            ticketid = "";
+        }
         charge.put("chargetype", "U");
         charge.put("ticketid", ticketid);
 
@@ -286,9 +289,9 @@ public class ThPayServiceImpl implements ThPayService {
         LoggerUtils.error(LOGGER, "createXml方法执行之前：msg："+msg.toString());
         String optXml = DomUtil.createXml("request", head, charge, null, null, null, msg);
 
-        LoggerUtils.error(LOGGER, "dopostXml之前 optXml：" + optXml);
+        LoggerUtils.error(LOGGER, phoneNo+"dopostXml之前 optXml：" + optXml);
         String result = HttpUtil.doPostXml(smsSussdUrl, optXml);
-        LoggerUtils.error(LOGGER, "dopostXml之后 result：" + result);
+        LoggerUtils.error(LOGGER, phoneNo+"dopostXml之后 result：" + result);
         if(!StringUtils.isEmpty(result)){
             try {
                 return XmlUtil.parse(result);

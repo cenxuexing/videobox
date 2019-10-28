@@ -111,7 +111,7 @@ public class ThNotifyController {
 			String xmlFile = new String(reByte);
 			LoggerUtils.info(LOGGER, "泰国短信扣费XML报文内容为：" + xmlFile);
 			Map<String,String> map = new HashMap<>();
-			LoggerUtils.info(LOGGER, "還沒有解析xml,之前的map..:" + map.toString());
+			LoggerUtils.info(LOGGER, "还没有解析xml,之前的map..:" + map.toString());
 			if(!StringUtils.isEmpty(xmlFile)) {
 
 				if(map!=null){
@@ -147,10 +147,11 @@ public class ThNotifyController {
 						}
 					}
 				}else if(ChargeTypeEnum.U.getCode().equals(chargetype)){
-					LoggerUtils.info(LOGGER, "添加退订记录");
+					LoggerUtils.info(LOGGER, userPhone+"添加退订记录");
+					thOrderService.createIndiaUnSubScribe(mmProductEntity, updateTime, userPhone, thirdSerialId, map);
 					Map resMap=new HashMap();
 					resMap=thPayService.sendUnsubSmsToCat(map.get("txid"), thirdSerialId, userPhone);
-					thOrderService.createIndiaUnSubScribe(mmProductEntity, updateTime, userPhone, thirdSerialId, map);
+
 				}else if(ChargeTypeEnum.R.getCode().equals(chargetype)){
 					LoggerUtils.info(LOGGER, "添加续订记录");
 					thOrderService.createIndiaReNewWal(mmProductEntity, updateTime, userPhone, thirdSerialId, map, OrderStatusEnum.CHARGED.getCode(), OrderTypeEnum.RENEW.getCode());
