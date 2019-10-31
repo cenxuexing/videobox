@@ -77,7 +77,7 @@ public class ThTimedTaskController {
 	 * 泰国CAT续订请求定时任务
 	 * @throws Exception
 	 */
-	@Scheduled(cron = "0 0 11 * * ?")
+	@Scheduled(cron = "0 0 18 * * ?")
 	@Synchronized
 	public void syncThRenewSubscribe() throws Exception {
 		LoggerUtils.info(LOGGER, "泰国CAT续订请求定时任务开始执行");

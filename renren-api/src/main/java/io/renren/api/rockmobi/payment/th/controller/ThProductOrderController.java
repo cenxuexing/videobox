@@ -195,7 +195,7 @@ public class ThProductOrderController {
 						if(optGenerating.getStatus().equals("653")){
 							return R.error().put("msg", errorMsg).put("code",653);
 						}else{
-							return R.error().put("msg",errorMsg);
+							return R.error().put("msg",errorMsg).put("code",optGenerating.getStatus());
 						}
 					}
 				}
