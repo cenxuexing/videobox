@@ -192,7 +192,11 @@ public class ThProductOrderController {
 						return R.ok().put("msg", optGenerating);
 					}else{
 						String errorMsg = ErrorCodeEnum.getDescByCode(String.valueOf(optGenerating.getStatus()));
-						return R.error().put("msg", errorMsg).put("code",653);
+						if(optGenerating.getStatus().equals("653")){
+							return R.error().put("msg", errorMsg).put("code",653);
+						}else{
+							return R.error().put("msg",errorMsg);
+						}
 					}
 				}
 			}
