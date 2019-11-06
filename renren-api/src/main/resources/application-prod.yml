@@ -21,9 +21,14 @@ spring:
     type: com.alibaba.druid.pool.DruidDataSource
     driverClassName: com.mysql.jdbc.Driver
     druid:
-      url: jdbc:mysql://dingyue.mysql.database.azure.com:3306/renren_security?allowMultiQueries=true&useUnicode=true&characterEncoding=UTF-8&useLegacyDatetimeCode=false&serverTimezone=UTC
-      username: QQYD_dingyue@dingyue
-      password: DU2g_Q@ayHI$
+      slave1:
+        url: jdbc:mysql://dingyue.mysql.database.azure.com:3306/renren_security?allowMultiQueries=true&useUnicode=true&characterEncoding=UTF-8&useLegacyDatetimeCode=false&serverTimezone=UTC
+        username: QQYD_dingyue@dingyue
+        password: DU2g_Q@ayHI$
+      dignity:
+        url: jdbc:mysql://192.168.60.181:3600/ifunworld?allowMultiQueries=true&useUnicode=true&characterEncoding=UTF-8&useLegacyDatetimeCode=false&serverTimezone=UTC
+        username: sam
+        password: sam_hujin2qun_181,36
       initial-size: 1
       min-idle: 100
       max-active: 300

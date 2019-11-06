@@ -261,7 +261,7 @@ public class TestPromotionSMSSending {
 
     @Test
     public void test005(){
-        String str = phPayService.inboundSmsSub();
+        String str = phPayService.inboundSmsSub("");
         System.out.println(str);
     }
 
@@ -302,7 +302,7 @@ public class TestPromotionSMSSending {
 
     @Test
     public void test009(){
-        String str = phPayService.individualInboundSmsCertification("http://125.60.148.174:8312/1/smsmessaging/inbound/subscriptions/10001906040316520001175000");
+        String str = phPayService.individualInboundSmsCertification("http://125.60.148.174:8312/1/smsmessaging/inbound/subscriptions/10001906040316520001175000","");
         System.out.println(str);
     }
 
