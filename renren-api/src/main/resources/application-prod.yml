@@ -65,7 +65,7 @@ spring:
 
 ph:
   sm:
-    sp_password: G2fhAaiX
+    sp_password: skyair001
     sub_url: http://203.87.166.59:8312/1/smsmessaging/outbound/5840/requests
     notify_url: http://rpsmapi.uarocky.com/renren-api/ph/notify/client/delivery/status/json
     server_id: 0084002000009041 #0084002000008781
