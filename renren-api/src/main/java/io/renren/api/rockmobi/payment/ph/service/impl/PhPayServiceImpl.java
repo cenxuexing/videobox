@@ -116,6 +116,9 @@ public class PhPayServiceImpl implements PhPayService {
 		}
 		JSONObject productConfigMap = JSON.parseObject(mmProductEntity.getAttr());
         String timeStamp = DateUtils.format(new Date(), DateUtils.DATE_TIME1_PATTERN);
+
+        LoggerUtils.info(LOGGER, "smsSpPassword：" + smsSpPassword);
+
 		String phPassword = DigestUtils.md5Hex(spId + smsSpPassword + timeStamp);
 
 		Map<String,Object> mapHead = new LinkedHashMap<>();
