@@ -59,14 +59,14 @@ public class PhNotifyController {
 	 */
 	@RequestMapping(value = "/sync/order/relation", method = { RequestMethod.GET, RequestMethod.POST })
 	public String phOrderNotify(HttpServletRequest request) {
-
+		LoggerUtils.info(LOGGER,"/sync/order/relation>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>");
 		PhResultResponse phResultResponse = new PhResultResponse();
 		String resultCode = "";
 		try {
 			InputStream ins = request.getInputStream();
 			byte[] reByte = XmlUtil.readStream(ins);
 			String xmlFile = new String(reByte);
-			LoggerUtils.info(LOGGER, "菲律宾同步订单返回的XML报文内容为：" + xmlFile);
+			LoggerUtils.info(LOGGER, "xxx菲律宾同步订单返回的XML报文内容为：" + xmlFile);
 			if(!StringUtils.isEmpty(xmlFile)) {
 				Map<String,String> map = XmlUtil.parse(xmlFile);
 				LoggerUtils.info(LOGGER, "xml报文转换为map..:" + map.toString());
