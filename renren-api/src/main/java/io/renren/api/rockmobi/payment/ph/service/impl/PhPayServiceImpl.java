@@ -284,7 +284,7 @@ public class PhPayServiceImpl implements PhPayService {
 			if(StringUtils.isEmpty(mmProductEntity)){
 				LoggerUtils.info(LOGGER, "产品信息不存在");
 			}
-
+			LoggerUtils.info(LOGGER,"同步产品信息开始>>>>>>>>>>>>>"+map.toString());
 			Date updateTime = DateUtils.parse(map.get("updateTime"), DateUtils.DATE_TIME1_PATTERN);
 			int updateType = Integer.valueOf(map.get("updateType"));
 			String userPhone = map.get("id");
