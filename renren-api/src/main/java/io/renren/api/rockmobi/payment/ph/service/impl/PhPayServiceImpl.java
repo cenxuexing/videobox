@@ -287,7 +287,7 @@ public class PhPayServiceImpl implements PhPayService {
 			LoggerUtils.info(LOGGER,"同步产品信息开始>>>>>>>>>>>>>"+map.toString());
 			Date updateTime = DateUtils.parse(map.get("updateTime"), DateUtils.DATE_TIME1_PATTERN);
 			int updateType = Integer.valueOf(map.get("updateType"));
-			String userPhone = map.get("id");
+			String userPhone = map.get("ID");
 			String thirdSerialId = map.get("");
 			if(updateType == 1){
 				LoggerUtils.info(LOGGER, "添加首次订阅");
