@@ -68,7 +68,7 @@ ph:
     sp_password: 0lS90z2h
     sub_url: http://203.87.166.59:8312/1/smsmessaging/outbound/5840/requests
     notify_url: http://rpsmapi.uarocky.com/renren-api/ph/notify/client/delivery/status/json
-    server_id: 0064092000011854 #0084002000008781
+    server_id: 0064092000011854 #0064092000011854
     product_id: 1000030361 #1000015904 1000015927 1000016205
   wap:
     server_id: 0064092000011854

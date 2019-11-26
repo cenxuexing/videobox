@@ -218,7 +218,7 @@ public class PhPayServiceImpl implements PhPayService {
 		mapSub.put("outboundSMSMessageRequest", mapCall);
 		String json = JSONObject.parseObject(JSON.toJSONString(mapSub)).toJSONString();
 		LoggerUtils.info(LOGGER, "菲律宾outbound请求参数：" + json);// "0084002000008781"
-		String result = HttpUtil.doPostSmsSub(smsSubUrl, json, smsSpPassword, "0084002000009041", smsProductId, "outbound", phoneNo);
+		String result = HttpUtil.doPostSmsSub(smsSubUrl, json, smsSpPassword, smsServiceId, smsProductId, "outbound", phoneNo);
 		LoggerUtils.info(LOGGER, "菲律宾outbound请求参数结果：" + result);
 		JSONObject jsonObject = JSONObject.parseObject(result);
 		JSONObject jsonObj = jsonObject.getJSONObject("resourceReference");
