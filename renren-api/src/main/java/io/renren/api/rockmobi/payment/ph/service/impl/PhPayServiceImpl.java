@@ -88,6 +88,9 @@ public class PhPayServiceImpl implements PhPayService {
 	@Autowired
 	private PhOrderService phService;
 
+	@Autowired
+	private PhPayService phPayService;
+
 	private static final String SUBSCRIBE_PRODUCT_REQ = "subscribeProductReq";
 
 
@@ -289,7 +292,15 @@ public class PhPayServiceImpl implements PhPayService {
 			int updateType = Integer.valueOf(map.get("updateType"));
 			String userPhone = map.get("ID");
 			String thirdSerialId = map.get("");
+			String outBoundSubReturnStr;
 			if(updateType == 1){
+				//CP向CDP发起下行短信
+				try {//smart号：09234105821，空号09612444042
+					outBoundSubReturnStr = phPayService.smsOutBoundSubscribeProductRequest(userPhone);
+					LoggerUtils.info(LOGGER, "subscribe success outbound>>>>>>>>>>" + outBoundSubReturnStr);
+				} catch (Exception e) {
+					e.printStackTrace();
+				}
 				LoggerUtils.info(LOGGER, "添加首次订阅");
 				//首次订阅
 				phService.createIndiaReNewWal(mmProductEntity, updateTime, userPhone, thirdSerialId, map, OrderStatusEnum.CHARGED.getCode(), OrderTypeEnum.FRIST_SUBSCRIBLE.getCode());
