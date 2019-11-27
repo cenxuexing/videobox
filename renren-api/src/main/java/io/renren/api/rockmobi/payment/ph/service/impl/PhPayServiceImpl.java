@@ -205,7 +205,7 @@ public class PhPayServiceImpl implements PhPayService {
 		//callbackReference.setCallbackData("123");
 		callbackReference.setNotificationFormat("json");
 		Map mapMsmText = Maps.newLinkedHashMap();
-		mapMsmText.put("message", "Hello");
+		mapMsmText.put("message", "Hello subscribe success.......................");
 		List<String> list = Lists.newArrayList();
 		list.add(phoneNo);
 		Map mapCall = Maps.newLinkedHashMap();
@@ -217,7 +217,7 @@ public class PhPayServiceImpl implements PhPayService {
 		Map mapSub = Maps.newLinkedHashMap();
 		mapSub.put("outboundSMSMessageRequest", mapCall);
 		String json = JSONObject.parseObject(JSON.toJSONString(mapSub)).toJSONString();
-		LoggerUtils.info(LOGGER, "菲律宾outbound请求参数：" + json);// "0084002000008781"
+		LoggerUtils.info(LOGGER, "菲律宾outbound请求参数>>>>>>" + json+",smsSpPassword="+smsSpPassword+",smsServiceId="+smsServiceId+",smsProductId"+smsProductId);// "0084002000008781"
 		String result = HttpUtil.doPostSmsSub(smsSubUrl, json, smsSpPassword, smsServiceId, smsProductId, "outbound", phoneNo);
 		LoggerUtils.info(LOGGER, "菲律宾outbound请求参数结果：" + result);
 		JSONObject jsonObject = JSONObject.parseObject(result);
