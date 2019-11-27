@@ -277,8 +277,8 @@ public class HttpUtil {
         HttpPost httpPost = new HttpPost(postUrl);
         try {
             httpPost.setHeader("Authorization", "WSSE realm=CDP,profile=UsernameToken");
-            httpPost.setHeader("X-WSSE", "UsernameToken Username=008400,PasswordDigest=G2fhAaiX,Nonce="+uuid+",Created="+ DateUtils.format(new Date(), DateUtils.DATE_TIME4_PATTERN));
-            httpPost.setHeader("X-RequestHeader", "request ServiceId=0084002000008801,ProductId");
+            httpPost.setHeader("X-WSSE", "UsernameToken Username=006409,PasswordDigest=G2fhAaiX,Nonce="+uuid+",Created="+ DateUtils.format(new Date(), DateUtils.DATE_TIME4_PATTERN));
+            httpPost.setHeader("X-RequestHeader", "request ServiceId=0064092000011854,ProductId");
             //httpPost.setHeader("Content-length", );
 
             httpPost.setHeader("Content-Type", "application/json;charset=UTF-8");
@@ -333,7 +333,7 @@ public class HttpUtil {
             //httpPost.setHeader("Content-length", String.valueOf(json.length()));
             //httpPost.setHeader("Host", "168.63.246.122:80");
             httpPost.setHeader("Authorization", "WSSE realm=\"CDP\",profile=\"UsernameToken\"");
-            httpPost.setHeader("X-WSSE", "UsernameToken Username=\"00640\",PasswordDigest=\""+passwordDigst+"\",Nonce=\""+nonce+"\",Created=\""+created+"\"" );
+            httpPost.setHeader("X-WSSE", "UsernameToken Username=\"006409\",PasswordDigest=\""+passwordDigst+"\",Nonce=\""+nonce+"\",Created=\""+created+"\"" );
             if(type.equals("inbound")){
                 httpPost.setHeader("X-RequestHeader", "request ServiceId=\""+smsServiceId+"\"");//\"++ \"");
             }else{
@@ -384,7 +384,7 @@ public class HttpUtil {
 
             httpDelete.setHeader("Content-Type", "application/json;charset=UTF-8");
             httpDelete.setHeader("Authorization", "WSSE realm=\"CDP\",profile=\"UsernameToken\"");
-            httpDelete.setHeader("X-WSSE", "UsernameToken Username=\"008400\",PasswordDigest=\""+passwordDigst+"\",Nonce=\""+nonce+"\",Created=\""+created+"\"" );
+            httpDelete.setHeader("X-WSSE", "UsernameToken Username=\"006409\",PasswordDigest=\""+passwordDigst+"\",Nonce=\""+nonce+"\",Created=\""+created+"\"" );
             if(type.equals("inbound")){
                 httpDelete.setHeader("X-RequestHeader", "request ServiceId=\""+smsServiceId+"\"");//\"++ \"");
             }else{
