@@ -333,7 +333,7 @@ public class HttpUtil {
             //httpPost.setHeader("Content-length", String.valueOf(json.length()));
             //httpPost.setHeader("Host", "168.63.246.122:80");
             httpPost.setHeader("Authorization", "WSSE realm=\"CDP\",profile=\"UsernameToken\"");
-            httpPost.setHeader("X-WSSE", "UsernameToken Username=\"008400\",PasswordDigest=\""+passwordDigst+"\",Nonce=\""+nonce+"\",Created=\""+created+"\"" );
+            httpPost.setHeader("X-WSSE", "UsernameToken Username=\"00640\",PasswordDigest=\""+passwordDigst+"\",Nonce=\""+nonce+"\",Created=\""+created+"\"" );
             if(type.equals("inbound")){
                 httpPost.setHeader("X-RequestHeader", "request ServiceId=\""+smsServiceId+"\"");//\"++ \"");
             }else{
