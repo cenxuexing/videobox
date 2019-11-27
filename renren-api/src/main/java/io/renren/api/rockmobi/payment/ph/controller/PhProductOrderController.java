@@ -204,7 +204,7 @@ public class PhProductOrderController {
 	@ApiOperation(value = "菲律宾发起取消订阅请求", response = PhProductOperAtorBO.class)
 	public R unSubscribeProduct(String phoneNumber){
 		String timeStamp = DateUtils.format(new Date(), DateUtils.DATE_TIME1_PATTERN);
-		String phPassword = DigestUtils.md5Hex("008400" + "G2fhAaiX" + timeStamp);
+		String phPassword = DigestUtils.md5Hex("006409" + "0lS90z2h" + timeStamp);
 		String str = "<soapenv:Envelope xmlns:soapenv='http://schemas.xmlsoap.org/soap/envelope/' xmlns:loc='http://www.csapi.org/schema/parlayx/subscribe/manage/v1_0/local'><soapenv:Header>\n" +
 				"<tns:RequestSOAPHeader\n" +
 				"xmlns:tns='http://www.huawei.com.cn/schema/common/v2_1'>\n" +

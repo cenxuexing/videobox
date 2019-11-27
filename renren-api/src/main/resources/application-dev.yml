@@ -86,7 +86,7 @@ spring:
     publisher-returns: true #开启发送失败退回
 ph:
   sm:
-    sp_password: G2fhAaiX
+    sp_password: 0lS90z2h
     sub_url: http://125.60.148.174:8312/1/smsmessaging/outbound/5840/requests
     notify_url: http://rpsmapi.uarocky.com/renren-api/ph/notify/client/delivery/status
     server_id: 0084002000008781

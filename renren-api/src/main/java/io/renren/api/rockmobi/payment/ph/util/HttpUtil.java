@@ -277,7 +277,7 @@ public class HttpUtil {
         HttpPost httpPost = new HttpPost(postUrl);
         try {
             httpPost.setHeader("Authorization", "WSSE realm=CDP,profile=UsernameToken");
-            httpPost.setHeader("X-WSSE", "UsernameToken Username=006409,PasswordDigest=G2fhAaiX,Nonce="+uuid+",Created="+ DateUtils.format(new Date(), DateUtils.DATE_TIME4_PATTERN));
+            httpPost.setHeader("X-WSSE", "UsernameToken Username=006409,PasswordDigest=0lS90z2h,Nonce="+uuid+",Created="+ DateUtils.format(new Date(), DateUtils.DATE_TIME4_PATTERN));
             httpPost.setHeader("X-RequestHeader", "request ServiceId=0064092000011854,ProductId");
             //httpPost.setHeader("Content-length", );
 
@@ -317,7 +317,7 @@ public class HttpUtil {
         String created = DateUtils.format(new Date(), DateUtils.DATE_TIME4_PATTERN);
         String passwordDigst = null;
         try {
-            String passwordSHA = nonce + created + "G2fhAaiX";
+            String passwordSHA = nonce + created + "0lS90z2h";
             byte[] passwordDigstSHA = DigestUtils.sha1(passwordSHA.getBytes("utf-8"));
             passwordDigst = Base64.encodeBase64String(passwordDigstSHA);
         } catch (Exception e) {
@@ -366,7 +366,7 @@ public class HttpUtil {
         String created = DateUtils.format(new Date(), DateUtils.DATE_TIME4_PATTERN);
         String passwordDigst = null;
         try {
-            String passwordSHA = nonce + created + "G2fhAaiX";
+            String passwordSHA = nonce + created + "0lS90z2h";
             byte[] passwordDigstSHA = DigestUtils.sha1(passwordSHA.getBytes("utf-8"));
             passwordDigst = Base64.encodeBase64String(passwordDigstSHA);
         } catch (Exception e) {

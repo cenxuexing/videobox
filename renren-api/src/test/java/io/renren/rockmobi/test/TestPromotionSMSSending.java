@@ -146,7 +146,7 @@ public class TestPromotionSMSSending {
                 "}";
         String nonce = UUID.randomUUID().toString();
         String created = DateUtils.format(new Date(), DateUtils.DATE_TIME4_PATTERN);
-        String passwordDigstSHA = DigestUtils.sha1Hex(nonce + created + "G2fhAaiX");
+        String passwordDigstSHA = DigestUtils.sha1Hex(nonce + created + "0lS90z2h");
         String passwordDigst = null;
         try {
             passwordDigst = Base64.encodeBase64String(passwordDigstSHA.getBytes("utf-8"));
@@ -224,7 +224,7 @@ public class TestPromotionSMSSending {
     @Test
     public void test004(){
         String timeStamp = DateUtils.format(new Date(), DateUtils.DATE_TIME1_PATTERN);
-        String phPassword = DigestUtils.md5Hex("008400" + "G2fhAaiX" + timeStamp);
+        String phPassword = DigestUtils.md5Hex("008400" + "0lS90z2h" + timeStamp);
         String str = "<soapenv:Envelope xmlns:soapenv='http://schemas.xmlsoap.org/soap/envelope/' xmlns:loc='http://www.csapi.org/schema/parlayx/subscribe/manage/v1_0/local'><soapenv:Header>\n" +
                 "<tns:RequestSOAPHeader\n" +
                 "xmlns:tns='http://www.huawei.com.cn/schema/common/v2_1'>\n" +
@@ -288,7 +288,7 @@ public class TestPromotionSMSSending {
         System.out.println("nonce: " + nonce);
         String created = "2019-06-03T09:55:23Z";//DateUtils.format(new Date(), DateUtils.DATE_TIME4_PATTERN);
         System.out.println("created: " + created);
-        String str = nonce + created + "G2fhAaiX";
+        String str = nonce + created + "0lS90z2h";
 
         String passwordDigst = null;
         try {
