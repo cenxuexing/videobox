@@ -218,7 +218,7 @@ public class PhPayServiceImpl implements PhPayService {
 		mapSub.put("outboundSMSMessageRequest", mapCall);
 		String json = JSONObject.parseObject(JSON.toJSONString(mapSub)).toJSONString();
 		LoggerUtils.info(LOGGER, "菲律宾outbound请求参数>>>>>>" + json+",smsSpPassword="+smsSpPassword+",smsServiceId="+smsServiceId+",smsProductId"+smsProductId);// "0084002000008781"
-		String result = HttpUtil.doPostSmsSub(smsSubUrl, json, smsSpPassword, smsServiceId, smsProductId, "outbound", phoneNo);
+		String result = HttpUtil.doPostSmsSub(smsSubUrl, json, smsSpPassword, "00"+smsServiceId, smsProductId, "outbound", phoneNo);
 		LoggerUtils.info(LOGGER, "菲律宾outbound请求参数结果：" + result);
 		JSONObject jsonObject = JSONObject.parseObject(result);
 		JSONObject jsonObj = jsonObject.getJSONObject("resourceReference");
@@ -251,7 +251,7 @@ public class PhPayServiceImpl implements PhPayService {
 		Map mapSub = Maps.newLinkedHashMap();
 		mapSub.put("subscription", mapCall);
 		String json = JSONObject.parseObject(JSON.toJSONString(mapSub)).toJSONString();
-		String result = HttpUtil.doPostSmsSub(smsSubUrl, json, smsSpPassword, smsServiceId, smsProductId, "inbound", phoneNo);
+		String result = HttpUtil.doPostSmsSub(smsSubUrl, json, smsSpPassword, "00"+smsServiceId, smsProductId, "inbound", phoneNo);
 		JSONObject jsonObject = JSONObject.parseObject(result);
 		JSONObject jsonObj = jsonObject.getJSONObject("resourceReference");
 		if(!StringUtils.isEmpty(jsonObj)){
@@ -365,7 +365,7 @@ public class PhPayServiceImpl implements PhPayService {
 
 		String subUrl = "http://125.60.148.174:8312/1/smsmessaging/outbound/"+senderAddress+"/subscriptions";
 		String json = JSONObject.parseObject(JSON.toJSONString(mapDrs)).toJSONString();
-		String result = HttpUtil.doPostSmsSub(subUrl, json, smsSpPassword, smsServiceId, smsProductId, "outbound", null);
+		String result = HttpUtil.doPostSmsSub(subUrl, json, smsSpPassword, "00"+smsServiceId, smsProductId, "outbound", null);
 		JSONObject jsonObject = JSONObject.parseObject(result);
 		JSONObject jsonObj = jsonObject.getJSONObject("resourceReference");
 		if(!StringUtils.isEmpty(jsonObj)){
@@ -381,7 +381,7 @@ public class PhPayServiceImpl implements PhPayService {
 		String senderAddress = null;
 		String subscriptionId = null;
 		String subUrl = "http://125.60.148.174:8312/1/outbound/"+senderAddress+"/subscriptions/"+subscriptionId;
-		String result = HttpUtil.doPostSmsSub(subUrl, null, smsSpPassword, smsServiceId, smsProductId, "outbound", null);
+		String result = HttpUtil.doPostSmsSub(subUrl, null, smsSpPassword, "00"+smsServiceId, smsProductId, "outbound", null);
 		JSONObject jsonObject = JSONObject.parseObject(result);
 		JSONObject jsonObj = jsonObject.getJSONObject("resourceReference");
 		if(!StringUtils.isEmpty(jsonObj)){
@@ -396,7 +396,7 @@ public class PhPayServiceImpl implements PhPayService {
 	public String outBoundSmsDeliveryStatus() {
 		String requestId = null;
 		String subUrl = "http://125.60.148.174:8312/1/smsmessaging/outbound/requests/"+requestId+"/deliveryInfos";
-		String result = HttpUtil.doPostSmsSub(subUrl, null, smsSpPassword, smsServiceId, smsProductId, "outbound", null);
+		String result = HttpUtil.doPostSmsSub(subUrl, null, smsSpPassword, "00"+smsServiceId, smsProductId, "outbound", null);
 		JSONObject jsonObject = JSONObject.parseObject(result);
 		JSONObject jsonObj = jsonObject.getJSONObject("resourceReference");
 		if(!StringUtils.isEmpty(jsonObj)){
