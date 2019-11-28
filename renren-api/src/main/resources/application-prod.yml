@@ -75,6 +75,7 @@ ph:
     sub_url: http://203.87.166.59:8310/SubscribeManageService/services/SubscribeManage
     product_id: 1000030361 #1000015884 1000015927 1000016205
     notify_url: rpsmapi.uarocky.com/renren-api/ph/sync/sms/order/relation
+    lp_url: http://rpsmwap.uarocky.com/phgame/?1=1#/
 
 
 th:

@@ -76,6 +76,10 @@ public class PhPayServiceImpl implements PhPayService {
 	@Value("${ph.wap.sub_url}")
 	private String wapSubUrl;
 
+	@Value("${ph.wap.lp_url}")
+	private String wapLpUrl;
+
+
 	@Autowired
 	private SerialNumberUtils serialNumberUtils;
 
@@ -205,7 +209,7 @@ public class PhPayServiceImpl implements PhPayService {
 		//callbackReference.setCallbackData("123");
 		callbackReference.setNotificationFormat("json");
 		Map mapMsmText = Maps.newLinkedHashMap();
-		mapMsmText.put("message", "Hello subscribe success.......................");
+		mapMsmText.put("message", "Enjoy game stay more fun please click url:"+wapLpUrl);
 		List<String> list = Lists.newArrayList();
 		list.add(phoneNo);
 		Map mapCall = Maps.newLinkedHashMap();
@@ -217,7 +221,7 @@ public class PhPayServiceImpl implements PhPayService {
 		Map mapSub = Maps.newLinkedHashMap();
 		mapSub.put("outboundSMSMessageRequest", mapCall);
 		String json = JSONObject.parseObject(JSON.toJSONString(mapSub)).toJSONString();
-		LoggerUtils.info(LOGGER, "菲律宾outbound请求参数>>>>>>" + json+",smsSpPassword="+smsSpPassword+",smsServiceId="+smsServiceId+",smsProductId"+smsProductId);// "0084002000008781"
+//		LoggerUtils.info(LOGGER, "菲律宾outbound请求参数>>>>>>" + json+",smsSpPassword="+smsSpPassword+",smsServiceId="+smsServiceId+",smsProductId"+smsProductId);// "0084002000008781"
 		String result = HttpUtil.doPostSmsSub(smsSubUrl, json, smsSpPassword, "00"+smsServiceId, smsProductId, "outbound", phoneNo);
 		LoggerUtils.info(LOGGER, "菲律宾outbound请求参数结果：" + result);
 		JSONObject jsonObject = JSONObject.parseObject(result);
