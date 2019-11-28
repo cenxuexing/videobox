@@ -73,6 +73,9 @@ public class PhProductOrderController {
 	@Autowired
 	private PhPayService phPayService;
 
+	@Value("${ph.wap.product_id}")
+	private String wapProductId;
+
 	/**
 	 * 获取用户订阅状态
 	 *
@@ -208,7 +211,7 @@ public class PhProductOrderController {
 		String str = "<soapenv:Envelope xmlns:soapenv='http://schemas.xmlsoap.org/soap/envelope/' xmlns:loc='http://www.csapi.org/schema/parlayx/subscribe/manage/v1_0/local'><soapenv:Header>\n" +
 				"<tns:RequestSOAPHeader\n" +
 				"xmlns:tns='http://www.huawei.com.cn/schema/common/v2_1'>\n" +
-				"<tns:spId>008400</tns:spId>\n" +
+				"<tns:spId>006409</tns:spId>\n" +
 				"<tns:spPassword>"+phPassword+"</tns:spPassword>\n" +
 				"<tns:timeStamp>"+timeStamp+"</tns:timeStamp>\n" +
 				"</tns:RequestSOAPHeader>\n" +
@@ -221,7 +224,7 @@ public class PhProductOrderController {
 				"<type>0</type>\n" +
 				"</userID>\n" +
 				"<subInfo>\n" +
-				"<productID>1000016205</productID>\n" +
+				"<productID>"+wapProductId+"</productID>\n" +
 				"<channelID>100</channelID>\n" +
 				"<extensionInfo>\n" +
 				"<namedParameters>\n" +
