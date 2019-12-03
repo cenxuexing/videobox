@@ -209,7 +209,7 @@ public class PhPayServiceImpl implements PhPayService {
 		//callbackReference.setCallbackData("123");
 		callbackReference.setNotificationFormat("json");
 		Map mapMsmText = Maps.newLinkedHashMap();
-		mapMsmText.put("message", "Enjoy game stay more fun please click url:"+wapLpUrl);
+//		mapMsmText.put("message", "Enjoy game stay more fun please click url:"+wapLpUrl);
 		List<String> list = Lists.newArrayList();
 		list.add(phoneNo);
 		Map mapCall = Maps.newLinkedHashMap();
