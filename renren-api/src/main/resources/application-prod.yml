@@ -70,6 +70,7 @@ ph:
     notify_url: http://rpsmapi.uarocky.com/renren-api/ph/notify/client/delivery/status/json
     server_id: 64092000011882 #0064092000011854
     product_id: 1000030431 #1000015904 1000015927 1000016205
+    partner_id: 6409
   wap:
     server_id: 64092000011882
     sub_url: http://203.87.166.59:8310/SubscribeManageService/services/SubscribeManage

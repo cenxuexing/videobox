@@ -58,6 +58,9 @@ public class PhProductOrderController {
 	@Value("${spring.profiles.active}")
 	private String profilesAction;
 
+	@Value("${ph.sm.sp_password}")
+	private String smsSpPassword;
+
 	@Autowired
 	private RedissonService redissonService;
 
@@ -76,6 +79,7 @@ public class PhProductOrderController {
 	@Value("${ph.wap.product_id}")
 	private String wapProductId;
 
+	private static final String spId = "006409";
 	/**
 	 * 获取用户订阅状态
 	 *
@@ -207,11 +211,11 @@ public class PhProductOrderController {
 	@ApiOperation(value = "菲律宾发起取消订阅请求", response = PhProductOperAtorBO.class)
 	public R unSubscribeProduct(String phoneNumber){
 		String timeStamp = DateUtils.format(new Date(), DateUtils.DATE_TIME1_PATTERN);
-		String phPassword = DigestUtils.md5Hex("006409" + "0lS90z2h" + timeStamp);
+		String phPassword = DigestUtils.md5Hex(spId + smsSpPassword + timeStamp);
 		String str = "<soapenv:Envelope xmlns:soapenv='http://schemas.xmlsoap.org/soap/envelope/' xmlns:loc='http://www.csapi.org/schema/parlayx/subscribe/manage/v1_0/local'><soapenv:Header>\n" +
 				"<tns:RequestSOAPHeader\n" +
 				"xmlns:tns='http://www.huawei.com.cn/schema/common/v2_1'>\n" +
-				"<tns:spId>006409</tns:spId>\n" +
+				"<tns:spId>"+spId+"</tns:spId>\n" +
 				"<tns:spPassword>"+phPassword+"</tns:spPassword>\n" +
 				"<tns:timeStamp>"+timeStamp+"</tns:timeStamp>\n" +
 				"</tns:RequestSOAPHeader>\n" +

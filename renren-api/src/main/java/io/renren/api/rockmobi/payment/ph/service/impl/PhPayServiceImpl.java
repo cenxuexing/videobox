@@ -184,7 +184,7 @@ public class PhPayServiceImpl implements PhPayService {
 		String json = JSONObject.parseObject(JSON.toJSONString(mapSub)).toJSONString();
 		LoggerUtils.info(LOGGER, "菲律宾inboundSmsSub请求url：" + subUrl);
 		LoggerUtils.info(LOGGER, "菲律宾inboundSmsSub请求参数：" + json);// "0084002000008781"
-		String result = HttpUtil.doPostSmsSub(subUrl, json, smsSpPassword, smsServiceId, smsProductId, "inbound", phoneNo);
+		String result = HttpUtil.doPostSmsSub(subUrl, json, smsSpPassword, "00"+smsServiceId, smsProductId, "inbound", phoneNo);
 		JSONObject jsonObject = JSONObject.parseObject(result);
 		//JSONObject jsonObj = jsonObject.getJSONObject("resourceReference");
 		/*if(!StringUtils.isEmpty(jsonObj)){
@@ -209,7 +209,7 @@ public class PhPayServiceImpl implements PhPayService {
 		//callbackReference.setCallbackData("123");
 		callbackReference.setNotificationFormat("json");
 		Map mapMsmText = Maps.newLinkedHashMap();
-//		mapMsmText.put("message", "Enjoy game stay more fun please click url:"+wapLpUrl);
+		mapMsmText.put("message", "Enjoy game stay more fun please click url:"+wapLpUrl);
 		List<String> list = Lists.newArrayList();
 		list.add(phoneNo);
 		Map mapCall = Maps.newLinkedHashMap();
@@ -326,7 +326,7 @@ public class PhPayServiceImpl implements PhPayService {
 	public String individualInboundSmsCertification(String inboundSmsCerUrl,String phoneNo) {
 
 		LoggerUtils.info(LOGGER, "request url: " + inboundSmsCerUrl);
-		String result = HttpUtil.doDelete("inbound", inboundSmsCerUrl, "0084002000008781", smsProductId,  phoneNo);
+		String result = HttpUtil.doDelete("inbound", inboundSmsCerUrl, "0084002000008781", smsProductId,smsSpPassword,  phoneNo);
 		return result;
 	}
 
@@ -341,7 +341,7 @@ public class PhPayServiceImpl implements PhPayService {
 		String subUrl = "http://125.60.148.174:8312/1/inbound/registrations/"+registrationId+"/retrieveAndDeleteMessages";
 		String json = JSONObject.parseObject(JSON.toJSONString(mapSad)).toJSONString();
 		LoggerUtils.info(LOGGER, "菲律宾inbound请求参数：" + json);
-		String result = HttpUtil.doPostSmsSub(subUrl, json, smsSpPassword, "0084002000008781", smsProductId, "inbound", null);
+		String result = HttpUtil.doPostSmsSub(subUrl, json, smsSpPassword, "00"+smsServiceId, smsProductId, "inbound", null);
 		JSONObject jsonObject = JSONObject.parseObject(result);
 		JSONObject jsonObj = jsonObject.getJSONObject("resourceReference");
 		if(!StringUtils.isEmpty(jsonObj)){
