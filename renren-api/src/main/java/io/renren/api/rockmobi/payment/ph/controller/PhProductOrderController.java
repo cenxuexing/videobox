@@ -118,13 +118,21 @@ public class PhProductOrderController {
 
 		// 检查是否因为rdis遗漏了缓存导致没有权限     //取消从redis中判断，因无论如何都要去数据库查订阅过期时间，故上一部操作是多余的
 		MmProductOrderEntity mm = mmProductOrderService.checkUserChargStatus(merchantProductOperAtorBo.getUserMsisdn(), merchantProductOperAtorBo.getProductCode(), merchantProductOperAtorBo.getOperatorCode(), merchantProductOperAtorBo.getMerchantCode());
+		UserEntity ue=null;
 		if (mm != null) {
 			// 根据MSISDN获取用户信息
-			UserEntity ue = userService.queryByMobile(merchantProductOperAtorBo.getUserMsisdn());
-			if (ue == null) {
-				// 如果订阅数据有，但是用户表没有，则用户信息有问题
-				LoggerUtils.info(LOGGER, "订阅数据有，但是用户表没有，则用户信息有问题，用户" + mm.getUserPhone() + "身份信息保存异常....");
-				throw new I18NException(ErrorCodeTemp.CODE_9004);
+			if("smart".equalsIgnoreCase(merchantProductOperAtorBo.getOperatorCode())){
+				String msisdnSmart=merchantProductOperAtorBo.getUserMsisdn();
+				msisdnSmart=msisdn.replaceAll("0","63");
+				ue = userService.queryByMobile(msisdnSmart);
+			}else{
+				ue = userService.queryByMobile(merchantProductOperAtorBo.getUserMsisdn());
+				if (ue == null) {
+					// 如果订阅数据有，但是用户表没有，则用户信息有问题
+					LoggerUtils.info(LOGGER, "订阅数据有，但是用户表没有，则用户信息有问题，用户" + mm.getUserPhone() + "身份信息保存异常....");
+					throw new I18NException(ErrorCodeTemp.CODE_9004);
+				}
+
 			}
 
 			// 获取登录token
