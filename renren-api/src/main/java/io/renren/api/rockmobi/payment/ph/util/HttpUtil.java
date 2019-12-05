@@ -342,7 +342,7 @@ public class HttpUtil {
             //httpPost.setHeader("Content-length", String.valueOf(json.length()));
             //httpPost.setHeader("Host", "168.63.246.122:80");
             httpPost.setHeader("Authorization", "WSSE realm=\"CDP\",profile=\"UsernameToken\"");
-            httpPost.setHeader("X-WSSE", "UsernameToken Username=\"00"+smspartnerId+"\",PasswordDigest=\""+passwordDigst+"\",Nonce=\""+nonce+"\",Created=\""+created+"\"" );
+            httpPost.setHeader("X-WSSE", "UsernameToken Username=\"006409\",PasswordDigest=\""+passwordDigst+"\",Nonce=\""+nonce+"\",Created=\""+created+"\"" );
             if(type.equals("inbound")){
                 httpPost.setHeader("X-RequestHeader", "request ServiceId=\""+smsServiceId+"\"");//\"++ \"");
             }else{
@@ -393,7 +393,7 @@ public class HttpUtil {
 
             httpDelete.setHeader("Content-Type", "application/json;charset=UTF-8");
             httpDelete.setHeader("Authorization", "WSSE realm=\"CDP\",profile=\"UsernameToken\"");
-            httpDelete.setHeader("X-WSSE", "UsernameToken Username=\"00"+smspartnerId+"\",PasswordDigest=\""+passwordDigst+"\",Nonce=\""+nonce+"\",Created=\""+created+"\"" );
+            httpDelete.setHeader("X-WSSE", "UsernameToken Username=\"006409\",PasswordDigest=\""+passwordDigst+"\",Nonce=\""+nonce+"\",Created=\""+created+"\"" );
             if(type.equals("inbound")){
                 httpDelete.setHeader("X-RequestHeader", "request ServiceId=\""+smsServiceId+"\"");//\"++ \"");
             }else{
