@@ -206,20 +206,41 @@ public class MmProductOrderServiceImpl extends ServiceImpl<MmProductOrderDao, Mm
 
 		
 		List<Integer> orderTypeList = Arrays.asList(OrderTypeEnum.FRIST_SUBSCRIBLE.getCode(), OrderTypeEnum.RENEW.getCode());
-		
+
+		//菲律宾特殊处理手机号码去掉0，增加国家码63
+		if(1002==operatorEntity.getId()){
+			String userUniquePH=userUnique.replaceAll("0","63");
+			/*****检查是否存在试用期订单*****/
+			List<MmProductOrderEntity> tiralList = mmProductOrderDao.getUserAvailableOrderByPhone(operatorEntity.getId(), merchantEntity.getId(), userUniquePH, OrderStatusEnum.TRIAL.getCode(), new Date(), orderTypeList);
+			if (tiralList != null && tiralList.size() > 0) {
+				return tiralList.get(0);
+			}
+			/*****检查是否存在试用期订单*****/
+
+			/*****检查是否存在有效订阅的订单*****/
+			List<MmProductOrderEntity> list = mmProductOrderDao.getUserAvailableOrderByPhone(operatorEntity.getId(), merchantEntity.getId(), userUniquePH, OrderStatusEnum.CHARGED.getCode(), new Date(), orderTypeList);
+			if (list != null && list.size() > 0) {
+				return list.get(0);
+			}
+			/*****检查是否存在有效订阅的订单*****/
+		}
+
 		/*****检查是否存在试用期订单*****/ 
 		List<MmProductOrderEntity> tiralList = mmProductOrderDao.getUserAvailableOrderByPhone(operatorEntity.getId(), merchantEntity.getId(), userUnique, OrderStatusEnum.TRIAL.getCode(), new Date(), orderTypeList);
 		if (tiralList != null && tiralList.size() > 0) {
 			return tiralList.get(0);
 		}
 		/*****检查是否存在试用期订单*****/
-		
-		/*****检查是否存在有效订阅的订单*****/  
+
+		/*****检查是否存在有效订阅的订单*****/
 		List<MmProductOrderEntity> list = mmProductOrderDao.getUserAvailableOrderByPhone(operatorEntity.getId(), merchantEntity.getId(), userUnique, OrderStatusEnum.CHARGED.getCode(), new Date(), orderTypeList);
 		if (list != null && list.size() > 0) {
 			return list.get(0);
 		}
-		/*****检查是否存在有效订阅的订单*****/  
+		/*****检查是否存在有效订阅的订单*****/
+
+
+
 		return null;
 	}
 	
