@@ -209,7 +209,7 @@ public class PhPayServiceImpl implements PhPayService {
 		//callbackReference.setCallbackData("123");
 		callbackReference.setNotificationFormat("json");
 		Map mapMsmText = Maps.newLinkedHashMap();
-		mapMsmText.put("message", "Enjoy game stay more fun please click url:"+wapLpUrl);
+		mapMsmText.put("message", "Thanks for subscribing to GAME STAGE. Play unlimited games for P5/day. Start playing via this link "+wapLpUrl+" Data charges may apply. Quit? Reply GAME OFF for free. Help? Please send email to MAXPANSHI@163.com");
 		List<String> list = Lists.newArrayList();
 		list.add(phoneNo);
 		Map mapCall = Maps.newLinkedHashMap();
