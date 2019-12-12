@@ -291,12 +291,12 @@ public class SunPayServiceImpl implements SunPayService {
     @Override
     public void syncOrderRelation(Map<String, String> map) {
         try {
+            LoggerUtils.info(LOGGER, "sun:同步产品信息开始>>>>>>>>>>>>>" + map.toString());
             MmProductEntity mmProductEntity = mmProductService.queryProductByIndiaBsnl(map.get("serviceID"));
-            if (StringUtils.isEmpty(mmProductEntity)) {
+            if (null == mmProductEntity) {
                 LoggerUtils.info(LOGGER, "产品信息不存在");
                 return;
             }
-            LoggerUtils.info(LOGGER, "sun:同步产品信息开始>>>>>>>>>>>>>" + map.toString());
             Date updateTime = DateUtils.parse(map.get("updateTime"), DateUtils.DATE_TIME1_PATTERN);
             int updateType = Integer.parseInt(map.get("updateType"));
             String userPhone = map.get("ID");
