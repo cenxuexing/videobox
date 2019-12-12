@@ -16,7 +16,7 @@ public class MmMerchantServiceImpl implements MmMerchantService {
 	private MmMerchantDao mmMerchantDao;
 
 	@Override
-	@Cacheable(cacheNames = CacheConstant.NAME_COMMON_CACHE_300s)
+	@Cacheable(cacheNames = CacheConstant.NAME_COMMON_CACHE_300s, unless = "#result == null")
 	public MmMerchantEntity queryMmMerchantEntityById(Integer merchantId) {
 		MmMerchantEntity mmMerchantEntity = new MmMerchantEntity();
 		mmMerchantEntity.setId(merchantId);
@@ -24,7 +24,7 @@ public class MmMerchantServiceImpl implements MmMerchantService {
 	}
 
 	@Override
-	@Cacheable(cacheNames = CacheConstant.NAME_COMMON_CACHE_300s)
+	@Cacheable(cacheNames = CacheConstant.NAME_COMMON_CACHE_300s, unless = "#result == null")
 	public MmMerchantEntity queryMmMerchantEntityByCode(String mmMerchantCode) {
 		MmMerchantEntity mmMerchantEntity = new MmMerchantEntity();
 		mmMerchantEntity.setMerchantCode(mmMerchantCode);
