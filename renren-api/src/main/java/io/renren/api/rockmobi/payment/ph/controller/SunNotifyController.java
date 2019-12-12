@@ -46,7 +46,7 @@ public class SunNotifyController {
             InputStream ins = request.getInputStream();
             byte[] reByte = XmlUtil.readStream(ins);
             String xmlFile = new String(reByte);
-            LoggerUtils.info(LOGGER, "sun菲律宾同步订单返回的XML报文内容为：" + xmlFile);
+            LoggerUtils.info(LOGGER, "sun:菲律宾同步订单返回的XML报文内容为：" + xmlFile);
             if (!StringUtils.isEmpty(xmlFile)) {
                 Map<String, String> map = XmlUtil.parse(xmlFile);
                 LoggerUtils.info(LOGGER, "xml报文转换为map..:" + map.toString());

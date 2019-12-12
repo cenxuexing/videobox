@@ -249,7 +249,7 @@ public class SunProductOrderController {
 
     @PostMapping("/api/outbound")
     public R outbound(String phoneNumber) {
-        LOGGER.info("ph outbound phone number {};", phoneNumber);
+        LOGGER.info("sun:ph outbound phone number {};", phoneNumber);
         String str = "";
         try {//smart号：09234105821，空号09612444042
             str = sunPayService.smsOutBoundSubscribeProductRequest(phoneNumber);

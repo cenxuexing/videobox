@@ -226,7 +226,7 @@ public class SunPayServiceImpl implements SunPayService {
         String json = JSONObject.parseObject(JSON.toJSONString(mapSub)).toJSONString();
 //		LoggerUtils.info(LOGGER, "菲律宾outbound请求参数>>>>>>" + json+",smsSpPassword="+smsSpPassword+",smsServiceId="+smsServiceId+",smsProductId"+smsProductId);// "0084002000008781"
         String result = HttpUtil.doPostSmsSub(smsSubUrl, json, smsSpPassword, "00" + smsServiceId, smsProductId, "outbound", phoneNo);
-        LoggerUtils.info(LOGGER, "菲律宾outbound请求参数结果：" + result);
+        LoggerUtils.info(LOGGER, "菲律宾outbound：sun请求参数结果：" + result);
         JSONObject jsonObject = JSONObject.parseObject(result);
         JSONObject jsonObj = jsonObject.getJSONObject("resourceReference");
         if (!StringUtils.isEmpty(jsonObj)) {
@@ -296,7 +296,7 @@ public class SunPayServiceImpl implements SunPayService {
                 LoggerUtils.info(LOGGER, "产品信息不存在");
                 return;
             }
-            LoggerUtils.info(LOGGER, "sun同步产品信息开始>>>>>>>>>>>>>" + map.toString());
+            LoggerUtils.info(LOGGER, "sun:同步产品信息开始>>>>>>>>>>>>>" + map.toString());
             Date updateTime = DateUtils.parse(map.get("updateTime"), DateUtils.DATE_TIME1_PATTERN);
             int updateType = Integer.parseInt(map.get("updateType"));
             String userPhone = map.get("ID");
