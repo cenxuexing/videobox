@@ -192,6 +192,9 @@ public class MmProductOrderServiceImpl extends ServiceImpl<MmProductOrderDao, Mm
 
 	@Override
 	public MmProductOrderEntity checkUserChargStatus(String userUnique, String productCode, String operatorCode, String merchantCode) {
+		if (StringUtils.isEmpty(userUnique) || StringUtils.isEmpty(productCode)
+				|| StringUtils.isEmpty(operatorCode) || StringUtils.isEmpty(merchantCode))
+			return null;
 		// 获取商户
 		MmMerchantEntity merchantEntity = mmMerchantService.queryMmMerchantEntityByCode(merchantCode);
 		Assert.isNull(merchantEntity, "无效商户");
