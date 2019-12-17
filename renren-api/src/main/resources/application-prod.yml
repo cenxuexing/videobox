@@ -90,7 +90,7 @@ ph:
     product_id: 1000030425
     #这个试订单同步地址，需要跟SDP一致，不能随意变更
     notify_url: rpsmapi.uarocky.com/renren-api/sun/sync/order/relation
-    lp_url: http://rpsmwap.uarocky.com/phgame/?1=1
+    lp_url: http://rpsmwap.uarocky.com/sungame/?1=1
 
 th:
   user: RockyMobi
