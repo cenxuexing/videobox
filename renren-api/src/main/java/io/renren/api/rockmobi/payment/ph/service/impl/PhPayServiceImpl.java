@@ -312,8 +312,8 @@ public class PhPayServiceImpl implements PhPayService {
 				LoggerUtils.info(LOGGER, "添加退订记录");
 				phService.createIndiaUnSubScribe(mmProductEntity, updateTime, userPhone, thirdSerialId, map);
 			}else if(updateType == 3){
-				LoggerUtils.info(LOGGER, "添加续订记录");
-				phService.createIndiaReNewWal(mmProductEntity, updateTime, userPhone, thirdSerialId, map, OrderStatusEnum.CHARGED.getCode(), OrderTypeEnum.RENEW.getCode());
+				LoggerUtils.info(LOGGER, "smart_sun: 意义不明处：updateType = 3");
+//				phService.createIndiaReNewWal(mmProductEntity, updateTime, userPhone, thirdSerialId, map, OrderStatusEnum.CHARGED.getCode(), OrderTypeEnum.RENEW.getCode());
 			}else{
 				LoggerUtils.info(LOGGER, "订单同步返回异常");
 			}
