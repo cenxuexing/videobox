@@ -1,14 +1,13 @@
 package io.renren.dao;
 
+import com.baomidou.mybatisplus.mapper.BaseMapper;
+import com.baomidou.mybatisplus.plugins.pagination.Pagination;
+import io.renren.entity.MmProductOrderEntity;
+import org.apache.ibatis.annotations.Param;
+
 import java.math.BigDecimal;
 import java.util.Date;
 import java.util.List;
-
-import org.apache.ibatis.annotations.Param;
-
-import com.baomidou.mybatisplus.mapper.BaseMapper;
-
-import io.renren.entity.MmProductOrderEntity;
 
 /**
  * 
@@ -120,4 +119,16 @@ public interface MmProductOrderDao extends BaseMapper<MmProductOrderEntity> {
 			@Param("userPhone")String userPhone,
 			@Param("settleStartDate")Date settleStartDate,
 			@Param("settleEndDate")Date settleEndDate);
+
+	/**
+	 * 分页获取指定运营商指定产品的待续订订单
+	 *  		用于查询菲律宾smart & sun的待续定记录
+	 * @param page
+	 * @param operatorId
+	 * @param productId
+	 * @param startTime
+	 * @param endTime
+	 * @return
+	 */
+    List<MmProductOrderEntity> queryPhRenewAutoRecord(Pagination page, @Param("operatorId") int operatorId, @Param("productId") int productId, @Param("startTime") String startTime, @Param("endTime") String endTime);
 }

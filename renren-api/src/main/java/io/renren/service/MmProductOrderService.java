@@ -5,6 +5,7 @@ import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
+import com.baomidou.mybatisplus.plugins.Page;
 import com.baomidou.mybatisplus.service.IService;
 
 import io.renren.entity.MmProductEntity;
@@ -250,7 +251,7 @@ public interface MmProductOrderService extends IService<MmProductOrderEntity> {
 	
 	/**
 	 * 
-	 * @param productOrderCode
+	 * @param productOrderEntity
 	 * @return
 	 */
 	Integer updateByProductOrderCode(MmProductOrderEntity productOrderEntity);
@@ -297,4 +298,16 @@ public interface MmProductOrderService extends IService<MmProductOrderEntity> {
 	 * @return
 	 */
 	List<MmProductOrderEntity> getParkingOrders(String operatorCode,Integer orderStatus,String userPhone,Date SettleStartDate,Date SettleEndDate);
+
+	/**
+	 * 分页获取指定运营商指定产品的待续订订单
+	 * 		用于查询菲律宾smart & sun的待续定记录
+	 * @param page
+	 * @param operatorId
+	 * @param productId
+	 * @param startTime
+	 * @param endTime
+	 * @return
+	 */
+	Page<MmProductOrderEntity> queryPhRenewAutoRecord(Page<MmProductOrderEntity> page, int operatorId, int productId, String startTime, String endTime);
 }

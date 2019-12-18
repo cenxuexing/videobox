@@ -3,6 +3,7 @@ package io.renren.service.impl;
 import com.alibaba.fastjson.JSON;
 import com.baomidou.mybatisplus.mapper.Condition;
 import com.baomidou.mybatisplus.mapper.EntityWrapper;
+import com.baomidou.mybatisplus.plugins.Page;
 import com.baomidou.mybatisplus.service.impl.ServiceImpl;
 import com.google.common.collect.Lists;
 import io.renren.api.rockmobi.user.entity.UserEntity;
@@ -595,4 +596,14 @@ public class MmProductOrderServiceImpl extends ServiceImpl<MmProductOrderDao, Mm
 		}
 		return mmProductOrderDao.getParkingOrders(mmOperatorEntity.getId(),orderStatus,userPhone,SettleStartDate,SettleEndDate);
 	}
+
+    @Override
+    public Page<MmProductOrderEntity> queryPhRenewAutoRecord(Page<MmProductOrderEntity> page, int operatorId, int productId, String startTime, String endTime) {
+		// 不进行 count sql 优化，解决 MP 无法自动优化 SQL 问题
+		page.setOptimizeCountSql(false);
+		// 不查询总记录数（只有首页查询总记录数）
+		page.setSearchCount(page.getCurrent() == 1);
+		// 注意！！ 分页 total 是经过插件自动 回写 到传入 page 对象
+		return page.setRecords(this.baseMapper.queryPhRenewAutoRecord(page, operatorId, productId, startTime, endTime));
+    }
 }

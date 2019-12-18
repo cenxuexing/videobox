@@ -200,5 +200,11 @@
 		</if>
 		AND is_available = 1 ORDER BY pay_start_time DESC
 	</select>
+	<select id="queryPhRenewAutoRecord" resultType="io.renren.entity.MmProductOrderEntity">
+		select a.* FROM mm_product_order a,
+			(select max(id) id from mm_product_order where operator_id=#{operatorId} and product_id=#{productId}
+				and pay_end_time BETWEEN #{startTime} AND #{endTime} GROUP BY user_phone) b
+		where a.id = b.id and a.order_state = 3 and a.order_type in (1,0)
+	</select>
 
 </mapper>
