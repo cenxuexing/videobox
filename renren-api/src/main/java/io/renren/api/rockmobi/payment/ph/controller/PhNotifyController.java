@@ -62,6 +62,7 @@ public class PhNotifyController {
 
 		PhResultResponse phResultResponse = new PhResultResponse();
 		String resultCode = "";
+
 		try {
 			InputStream ins = request.getInputStream();
 			byte[] reByte = XmlUtil.readStream(ins);
