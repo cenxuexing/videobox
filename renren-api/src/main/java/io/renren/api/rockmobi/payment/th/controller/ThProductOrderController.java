@@ -245,9 +245,9 @@ public class ThProductOrderController {
 
 
 	@GetMapping("/testDeduce")
-	public String testDeduce(){
+	public String testDeduce(String userPhone){
         MmProductOrderEntity mmProductOrderEntity = new MmProductOrderEntity();
-        mmProductOrderEntity.setUserPhone("66887971755");
+        mmProductOrderEntity.setUserPhone(userPhone);
 		mmProductOrderEntity.setProductPrice(9.0);
 		ChargeRecurringResp chargeRecurringResp = thPayService.renewSubscribe(mmProductOrderEntity);
 		return JSON.toJSONString(chargeRecurringResp);
