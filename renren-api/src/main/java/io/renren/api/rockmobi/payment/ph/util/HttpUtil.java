@@ -25,6 +25,7 @@ import org.apache.http.impl.client.HttpClients;
 import org.apache.http.util.EntityUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.util.StringUtils;
 
 import javax.servlet.http.HttpServletRequest;
@@ -46,6 +47,14 @@ public class HttpUtil {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(HttpUtil.class);
 
+    @Value("${ph.sm.server_id}")
+    private static String smsServiceId;
+
+    @Value("${ph.sm.sp_password}")
+    private static String smsSpPassword;
+
+    @Value("${ph.sm.partner_id}")
+    private static String smspartnerId;
     /**
      * 拼接字符串
      * @return
@@ -277,8 +286,8 @@ public class HttpUtil {
         HttpPost httpPost = new HttpPost(postUrl);
         try {
             httpPost.setHeader("Authorization", "WSSE realm=CDP,profile=UsernameToken");
-            httpPost.setHeader("X-WSSE", "UsernameToken Username=008400,PasswordDigest=G2fhAaiX,Nonce="+uuid+",Created="+ DateUtils.format(new Date(), DateUtils.DATE_TIME4_PATTERN));
-            httpPost.setHeader("X-RequestHeader", "request ServiceId=0084002000008801,ProductId");
+            httpPost.setHeader("X-WSSE", "UsernameToken Username=00"+smspartnerId+",PasswordDigest="+smsSpPassword+",Nonce="+uuid+",Created="+ DateUtils.format(new Date(), DateUtils.DATE_TIME4_PATTERN));
+            httpPost.setHeader("X-RequestHeader", "request ServiceId=00"+smsServiceId+",ProductId");
             //httpPost.setHeader("Content-length", );
 
             httpPost.setHeader("Content-Type", "application/json;charset=UTF-8");
@@ -317,7 +326,7 @@ public class HttpUtil {
         String created = DateUtils.format(new Date(), DateUtils.DATE_TIME4_PATTERN);
         String passwordDigst = null;
         try {
-            String passwordSHA = nonce + created + "G2fhAaiX";
+            String passwordSHA = nonce + created + spPassword;
             byte[] passwordDigstSHA = DigestUtils.sha1(passwordSHA.getBytes("utf-8"));
             passwordDigst = Base64.encodeBase64String(passwordDigstSHA);
         } catch (Exception e) {
@@ -333,7 +342,7 @@ public class HttpUtil {
             //httpPost.setHeader("Content-length", String.valueOf(json.length()));
             //httpPost.setHeader("Host", "168.63.246.122:80");
             httpPost.setHeader("Authorization", "WSSE realm=\"CDP\",profile=\"UsernameToken\"");
-            httpPost.setHeader("X-WSSE", "UsernameToken Username=\"008400\",PasswordDigest=\""+passwordDigst+"\",Nonce=\""+nonce+"\",Created=\""+created+"\"" );
+            httpPost.setHeader("X-WSSE", "UsernameToken Username=\"006409\",PasswordDigest=\""+passwordDigst+"\",Nonce=\""+nonce+"\",Created=\""+created+"\"" );
             if(type.equals("inbound")){
                 httpPost.setHeader("X-RequestHeader", "request ServiceId=\""+smsServiceId+"\"");//\"++ \"");
             }else{
@@ -360,13 +369,13 @@ public class HttpUtil {
         return retStr;
     }
 
-    public static String doDelete(String type, String uri, String smsServiceId, String productId, String phoneNo)  {
+    public static String doDelete(String type, String uri, String smsServiceId, String productId,String smsSpPassword, String phoneNo)  {
         String retStr = "";
         String nonce = String.valueOf(RandomUtil.getUpperCode(30, RandomUtil.SecurityCodeLevel.Medium, true));
         String created = DateUtils.format(new Date(), DateUtils.DATE_TIME4_PATTERN);
         String passwordDigst = null;
         try {
-            String passwordSHA = nonce + created + "G2fhAaiX";
+            String passwordSHA = nonce + created + smsSpPassword;
             byte[] passwordDigstSHA = DigestUtils.sha1(passwordSHA.getBytes("utf-8"));
             passwordDigst = Base64.encodeBase64String(passwordDigstSHA);
         } catch (Exception e) {
@@ -384,7 +393,7 @@ public class HttpUtil {
 
             httpDelete.setHeader("Content-Type", "application/json;charset=UTF-8");
             httpDelete.setHeader("Authorization", "WSSE realm=\"CDP\",profile=\"UsernameToken\"");
-            httpDelete.setHeader("X-WSSE", "UsernameToken Username=\"008400\",PasswordDigest=\""+passwordDigst+"\",Nonce=\""+nonce+"\",Created=\""+created+"\"" );
+            httpDelete.setHeader("X-WSSE", "UsernameToken Username=\"006409\",PasswordDigest=\""+passwordDigst+"\",Nonce=\""+nonce+"\",Created=\""+created+"\"" );
             if(type.equals("inbound")){
                 httpDelete.setHeader("X-RequestHeader", "request ServiceId=\""+smsServiceId+"\"");//\"++ \"");
             }else{

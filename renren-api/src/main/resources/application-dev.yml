@@ -86,7 +86,7 @@ spring:
     publisher-returns: true #开启发送失败退回
 ph:
   sm:
-    sp_password: G2fhAaiX
+    sp_password: 0lS90z2h
     sub_url: http://125.60.148.174:8312/1/smsmessaging/outbound/5840/requests
     notify_url: http://rpsmapi.uarocky.com/renren-api/ph/notify/client/delivery/status
     server_id: 0084002000008781
@@ -96,6 +96,21 @@ ph:
     sub_url: http://125.60.148.174:8310/SubscribeManageService/services/SubscribeManage
     product_id: 1000016205
     notify_url: rpsmapi.uarocky.com/sync/sms/order/relation
+    lp_url: http://rpsmwap.uarocky.com/phgame/?1=1#/
+  sun:
+    sp_password: 0lS90z2h
+    sub_url: http://203.87.166.59:8312/1/smsmessaging/outbound/5840/requests
+    notify_url: http://rpsmapi.uarocky.com/renren-api/sun/notify/client/delivery/status/json
+    server_id: 64092000011881
+    product_id: 1000030425
+    partner_id: 6409
+  wapsun:
+    server_id: 64092000011881
+    sub_url: http://203.87.166.59:8310/SubscribeManageService/services/SubscribeManage
+    product_id: 1000030425
+    #这个试订单同步地址，需要跟SDP一致，不能随意变更
+    notify_url: rpsmapi.uarocky.com/renren-api/sun/sync/order/relation
+    lp_url: http://rpsmwap.uarocky.com/phgame/?1=1
 
 th:
   user: RockyMobi
