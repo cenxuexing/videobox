@@ -81,13 +81,19 @@ ph:
     sp_password: 0lS90z2h
     sub_url: http://203.87.166.59:8312/1/smsmessaging/outbound/5840/requests
     notify_url: http://rpsmapi.uarocky.com/renren-api/sun/notify/client/delivery/status/json
-    server_id: 64092000011881
-    product_id: 1000030425
+    # 2019年12月20日11:56:03 注释原有
+#    server_id: 64092000011881
+#    product_id: 1000030425
+    server_id: 64092000011914
+    product_id: 1000030489
     partner_id: 6409
   wapsun:
-    server_id: 64092000011881
+    # 2019年12月20日11:56:03 注释原有
+#    server_id: 64092000011881
+#    product_id: 1000030425
+    server_id: 64092000011914
+    product_id: 1000030489
     sub_url: http://203.87.166.59:8310/SubscribeManageService/services/SubscribeManage
-    product_id: 1000030425
     #这个试订单同步地址，需要跟SDP一致，不能随意变更
     notify_url: rpsmapi.uarocky.com/renren-api/sun/sync/order/relation
     lp_url: http://rpsmwap.uarocky.com/sungame/?1=1
