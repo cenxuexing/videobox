@@ -3,6 +3,7 @@ package io.renren.api.rockmobi.payment.ph.controller;
 import com.baomidou.mybatisplus.mapper.EntityWrapper;
 import com.baomidou.mybatisplus.plugins.Page;
 import io.renren.api.rockmobi.payment.kh.controller.CellcardTimedTaskController;
+import io.renren.api.rockmobi.payment.ph.service.PhPayService;
 import io.renren.common.enums.OrderStatusEnum;
 import io.renren.common.enums.OrderTypeEnum;
 import io.renren.common.utils.DateUtils;
@@ -10,6 +11,7 @@ import io.renren.common.utils.SerialNumberUtils;
 import io.renren.entity.MmProductOrderEntity;
 import io.renren.redission.RedissonService;
 import io.renren.service.MmProductOrderService;
+import io.swagger.models.auth.In;
 import org.apache.commons.lang3.time.DateFormatUtils;
 import org.redisson.api.RLock;
 import org.slf4j.Logger;
@@ -22,6 +24,7 @@ import org.springframework.stereotype.Component;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
+import java.util.Objects;
 
 @Component
 public class PhScheduleJob {
@@ -32,6 +35,8 @@ public class PhScheduleJob {
     private SerialNumberUtils serialNumberUtils;
     @Autowired
     private RedissonService redissonService;
+    @Autowired
+    private PhPayService phPayService;
 
     /**
      * 菲律宾smart自动续订
@@ -48,7 +53,7 @@ public class PhScheduleJob {
         try {
             logger.info("ph schedule job: 执行smart的续订订单创建 >>>>> Start");
             // smart的产品参数
-            int operatorId = 1002, productId = 0;
+            int operatorId = 1002, productId = 1;
             this.autoRenew(operatorId, productId);
             logger.info("ph schedule job: 执行smart的续订订单创建 >>>>> End");
         } catch (Exception e) {
@@ -138,27 +143,44 @@ public class PhScheduleJob {
             return;
         records.forEach(x -> {
             try {
-                MmProductOrderEntity order = new MmProductOrderEntity();
-                BeanUtils.copyProperties(x, order);
-                order.setProductOrderCode(serialNumberUtils.createProductOrderCode());
-                order.setExt1(null);
-                // 生成续订订单
-                order.setOrderType(OrderTypeEnum.RENEW.getCode());
-                order.setOrderState(OrderStatusEnum.CHARGED.getCode());
-                // 修改时间信息
-                order.setCreateTime(new Date());
-                order.setUpdateTime(new Date());
-                order.setPayEndTime(new Date());
-                order.setPayStartTime(new Date());
-                order.setExpireDate(expireDate);
+                // 如果是已经扣费成功的状态，直接生成成功订单
+                if (Objects.equals(x.getOrderState(), OrderStatusEnum.CHARGED.getCode())) {
+                    MmProductOrderEntity order = new MmProductOrderEntity();
+                    BeanUtils.copyProperties(x, order);
+                    order.setProductOrderCode(serialNumberUtils.createProductOrderCode());
+                    order.setExt1(null);
+                    // 生成续订订单
+                    order.setOrderType(OrderTypeEnum.RENEW.getCode());
+                    order.setOrderState(OrderStatusEnum.CHARGED.getCode());
+                    // 修改时间信息
+                    order.setCreateTime(new Date());
+                    order.setUpdateTime(new Date());
+                    order.setPayEndTime(new Date());
+                    order.setPayStartTime(new Date());
+                    order.setExpireDate(expireDate);
 
-                // 通知相关
-                order.setChannelNotifyTime(null);
-                order.setChannelNotifyState(null);
-                mmProductOrderService.insert(order);
+                    // 通知相关
+                    order.setChannelNotifyTime(null);
+                    order.setChannelNotifyState(null);
+                    mmProductOrderService.insert(order);
+                } else {
+                    // 处理超过90天suspend期的数据，将订单状态从1改为4
+                    if ((new Date().getTime() - x.getPayEndTime().getTime()) / 1000 / 60 / 60 / 24 > 10) {
+                        x.setOrderState(OrderStatusEnum.DENIED.getCode());
+                        mmProductOrderService.insertOrUpdate(x);
+                        logger.info("用户【{}】超过90天suspend期未成功续订，修改订单状态为4", x.getUserPhone());
+                    }
+                }
+                // 剩余的Suspend账单，直接发送通知。如果扣费成功响应lifting状态再处理，此处不创建冗余的订单记录
+
+                // 调用扣费接口(因为会发送短信，所以扣费时间好像。。。)
+                phPayService.smsOutBoundSubscribeProductRequest(x.getUserPhone());
+
             } catch (Exception e) {
                 logger.error("ph schedule job: 执行插入自动续订记录异常", e);
             }
         });
     }
+
+
 }
