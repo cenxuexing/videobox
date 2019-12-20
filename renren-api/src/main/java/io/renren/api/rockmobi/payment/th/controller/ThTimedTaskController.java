@@ -134,4 +134,7 @@ public class ThTimedTaskController {
 		}
 		LoggerUtils.info(LOGGER, "泰国CAT续订请求定时任务执行结束");
 	}
+
+
+
 }

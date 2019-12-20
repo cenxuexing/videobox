@@ -244,4 +244,13 @@ public class ThProductOrderController {
 	}
 
 
+	@GetMapping("/testDeduce")
+	public String testDeduce(String userPhone){
+        MmProductOrderEntity mmProductOrderEntity = new MmProductOrderEntity();
+        mmProductOrderEntity.setUserPhone(userPhone);
+		mmProductOrderEntity.setProductPrice(9.0);
+		ChargeRecurringResp chargeRecurringResp = thPayService.renewSubscribe(mmProductOrderEntity);
+		return JSON.toJSONString(chargeRecurringResp);
+	}
+
 }
