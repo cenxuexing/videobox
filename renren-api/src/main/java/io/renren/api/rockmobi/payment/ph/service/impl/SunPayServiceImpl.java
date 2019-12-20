@@ -304,7 +304,8 @@ public class SunPayServiceImpl implements SunPayService {
             String outBoundSubReturnStr;
             if (updateType == 1) {
                 //CP向CDP发起下行短信
-                try {//smart号：09234105821，空号09612444042
+                try {
+                    // 向CDP发起扣费请求
                     outBoundSubReturnStr = this.smsOutBoundSubscribeProductRequest(userPhone);
                     LoggerUtils.info(LOGGER, "subscribe success outbound>>>>>>>>>>" + outBoundSubReturnStr);
                 } catch (Exception e) {
@@ -317,7 +318,9 @@ public class SunPayServiceImpl implements SunPayService {
                 LoggerUtils.info(LOGGER, "添加退订记录");
                 phService.createIndiaUnSubScribe(mmProductEntity, updateTime, userPhone, thirdSerialId, map);
             } else if (updateType == 3) {
-                LoggerUtils.info(LOGGER, "smart_sun: 意义不明处：updateType = 3");
+                //  修改订单状态为suspended状态，
+                //  余额不足等待扣费，将订单改成【1-0】状态，或插入一条【1-0】状态的订单
+                phService.handleSuspendAndLift(mmProductEntity, updateTime, userPhone, map);
 //                phService.createIndiaReNewWal(mmProductEntity, updateTime, userPhone, thirdSerialId, map, OrderStatusEnum.CHARGED.getCode(), OrderTypeEnum.RENEW.getCode());
             } else {
                 LoggerUtils.info(LOGGER, "订单同步返回异常");

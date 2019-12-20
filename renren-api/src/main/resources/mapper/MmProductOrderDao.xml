@@ -206,5 +206,9 @@
 				and pay_end_time BETWEEN #{startTime} AND #{endTime} GROUP BY user_phone) b
 		where a.id = b.id and a.order_state in (3, 1) and a.order_type in (1,0)
 	</select>
+    <select id="queryLastOrder" resultType="io.renren.entity.MmProductOrderEntity">
+		select * from mm_product_order where user_phone= #{userPhone} and operator_id=#{operatorId} and product_id=#{productId}
+			order by pay_end_time desc limit 1
+	</select>
 
 </mapper>

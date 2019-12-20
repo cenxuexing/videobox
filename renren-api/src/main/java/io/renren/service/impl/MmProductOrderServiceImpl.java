@@ -606,4 +606,9 @@ public class MmProductOrderServiceImpl extends ServiceImpl<MmProductOrderDao, Mm
 		// 注意！！ 分页 total 是经过插件自动 回写 到传入 page 对象
 		return page.setRecords(this.baseMapper.queryPhRenewAutoRecord(page, operatorId, productId, startTime, endTime));
     }
+
+    @Override
+    public MmProductOrderEntity queryLastOrder(Integer productId, Integer operatorId, String userPhone) {
+        return this.baseMapper.queryLastOrder(productId, operatorId, userPhone);
+    }
 }

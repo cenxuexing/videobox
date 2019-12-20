@@ -310,4 +310,13 @@ public interface MmProductOrderService extends IService<MmProductOrderEntity> {
 	 * @return
 	 */
 	Page<MmProductOrderEntity> queryPhRenewAutoRecord(Page<MmProductOrderEntity> page, int operatorId, int productId, String startTime, String endTime);
+
+	/**
+	 * 查询指定用户指定产品的最后一条订单记录
+	 * @param productId
+	 * @param operatorId
+	 * @param userPhone
+	 * @return
+	 */
+    MmProductOrderEntity queryLastOrder(Integer productId, Integer operatorId, String userPhone);
 }

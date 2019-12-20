@@ -37,4 +37,15 @@ public interface PhOrderService {
      * @param reNewParam
      */
     void createIndiaUnSubScribe(MmProductEntity mmProductEntity, Date activeDate, String userPhone, String thirdSerialId, Map<String, String> reNewParam);
+
+    /**
+     * 处理suspend和lift回传
+     *      suspend： 由于用户账户余额不足，订阅关系会进入90天的suspend期，不能游玩游戏
+     *      lift:    用户充值后，会对处于suspend期的订单进行扣费成功通知，以退出suspend期，用户可正常游玩游戏
+     * @param mmProductEntity
+     * @param updateTime
+     * @param userPhone
+     * @param map
+     */
+    void handleSuspendAndLift(MmProductEntity mmProductEntity, Date updateTime, String userPhone, Map<String, String> map);
 }
