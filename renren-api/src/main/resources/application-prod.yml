@@ -68,13 +68,19 @@ ph:
     sp_password: 0lS90z2h
     sub_url: http://203.87.166.59:8312/1/smsmessaging/outbound/5840/requests
     notify_url: http://rpsmapi.uarocky.com/renren-api/ph/notify/client/delivery/status/json
-    server_id: 64092000011882 #0064092000011854
-    product_id: 1000030431 #1000015904 1000015927 1000016205
+    # 2019年12月20日13:59:21 注释原有
+#    server_id: 64092000011882 #0064092000011854
+#    product_id: 1000030431 #1000015904 1000015927 1000016205
+    server_id: 64092000011915
+    product_id: 1000030491
     partner_id: 6409
   wap:
-    server_id: 64092000011882
+    # 2019年12月20日13:59:21 注释原有
+#    server_id: 64092000011882
+#    product_id: 1000030431 #1000015884 1000015927 1000016205
+    server_id: 64092000011915
+    product_id: 1000030491
     sub_url: http://203.87.166.59:8310/SubscribeManageService/services/SubscribeManage
-    product_id: 1000030431 #1000015884 1000015927 1000016205
     notify_url: rpsmapi.uarocky.com/renren-api/ph/sync/sms/order/relation
     lp_url: http://rpsmwap.uarocky.com/phgame/?1=1
   sun:
