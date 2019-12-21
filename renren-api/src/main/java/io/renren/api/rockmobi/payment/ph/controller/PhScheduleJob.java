@@ -55,7 +55,7 @@ public class PhScheduleJob {
      * 2019-12-31 03:00:00
      *
      */
-    @Scheduled(cron = "0 15 3 1/1 * ?  ")
+    @Scheduled(cron = "0 20 3 1/1 * ?  ")
     public void autoRenewJob_smart() {
         String lock_key = "smart_lock_20191218_16";
         RLock rLock = redissonService.getLock(lock_key);
