@@ -611,4 +611,11 @@ public class MmProductOrderServiceImpl extends ServiceImpl<MmProductOrderDao, Mm
     public MmProductOrderEntity queryLastOrder(Integer productId, Integer operatorId, String userPhone) {
         return this.baseMapper.queryLastOrder(productId, operatorId, userPhone);
     }
+
+	@Override
+	public Page<MmProductOrderEntity> queryPhSuspendRecord(Page<MmProductOrderEntity> page, int operatorId, int productId) {
+		page.setOptimizeCountSql(false);
+		page.setSearchCount(page.getCurrent() == 1);
+		return page.setRecords(this.baseMapper.queryPhSuspendRecord(page, operatorId, productId));
+	}
 }

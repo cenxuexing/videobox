@@ -224,17 +224,17 @@ public class PhPayServiceImpl implements PhPayService {
 //		LoggerUtils.info(LOGGER, "菲律宾outbound请求参数>>>>>>" + json+",smsSpPassword="+smsSpPassword+",smsServiceId="+smsServiceId+",smsProductId"+smsProductId);// "0084002000008781"
 		String result = HttpUtil.doPostSmsSub(smsSubUrl, json, smsSpPassword, "00"+smsServiceId, smsProductId, "outbound", phoneNo);
 		LoggerUtils.info(LOGGER, "菲律宾outbound请求参数结果：" + result);
-		JSONObject jsonObject = JSONObject.parseObject(result);
-		JSONObject jsonObj = jsonObject.getJSONObject("resourceReference");
-		if(!StringUtils.isEmpty(jsonObj)){
-			String resourceURL = jsonObj.getString("resourceURL");
-			if(!StringUtils.isEmpty(resourceURL)){
-
-			}
-		}else{
-			//处理返回的错误信息
-		}
-		return null;
+//		JSONObject jsonObject = JSONObject.parseObject(result);
+//		JSONObject jsonObj = jsonObject.getJSONObject("resourceReference");
+//		if(!StringUtils.isEmpty(jsonObj)){
+//			String resourceURL = jsonObj.getString("resourceURL");
+//			if(!StringUtils.isEmpty(resourceURL)){
+//
+//			}
+//		}else{
+//			//处理返回的错误信息
+//		}
+		return result;
 	}
 
 

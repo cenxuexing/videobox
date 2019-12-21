@@ -204,11 +204,17 @@
 		select a.* FROM mm_product_order a,
 			(select max(id) id from mm_product_order where operator_id=#{operatorId} and product_id=#{productId}
 				and pay_end_time BETWEEN #{startTime} AND #{endTime} GROUP BY user_phone) b
-		where a.id = b.id and a.order_state in (3, 1) and a.order_type in (1,0)
+		where a.id = b.id and a.order_state = 3 and a.order_type in (1,0)
 	</select>
     <select id="queryLastOrder" resultType="io.renren.entity.MmProductOrderEntity">
 		select * from mm_product_order where user_phone= #{userPhone} and operator_id=#{operatorId} and product_id=#{productId}
 			order by pay_end_time desc limit 1
+	</select>
+	<select id="queryPhSuspendRecord" resultType="io.renren.entity.MmProductOrderEntity">
+		select a.* FROM mm_product_order a,
+			(select max(id) id from mm_product_order where operator_id=#{operatorId} and product_id=#{productId}
+				and TO_DAYS(update_time) &lt; TO_DAYS(now()) GROUP BY user_phone) b
+		where a.id = b.id and a.order_state = 1 and a.order_type in (1,0)
 	</select>
 
 </mapper>

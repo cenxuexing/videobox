@@ -319,4 +319,13 @@ public interface MmProductOrderService extends IService<MmProductOrderEntity> {
 	 * @return
 	 */
     MmProductOrderEntity queryLastOrder(Integer productId, Integer operatorId, String userPhone);
+
+	/**
+	 * 查询ph的suspend状态订单，1-0/1-1
+	 * @param page
+	 * @param operatorId
+	 * @param productId
+	 * @return
+	 */
+    Page<MmProductOrderEntity> queryPhSuspendRecord(Page<MmProductOrderEntity> page, int operatorId, int productId);
 }

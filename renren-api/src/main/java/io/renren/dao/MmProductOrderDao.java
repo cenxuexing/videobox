@@ -133,4 +133,6 @@ public interface MmProductOrderDao extends BaseMapper<MmProductOrderEntity> {
     List<MmProductOrderEntity> queryPhRenewAutoRecord(Pagination page, @Param("operatorId") int operatorId, @Param("productId") int productId, @Param("startTime") String startTime, @Param("endTime") String endTime);
 
 	MmProductOrderEntity queryLastOrder(@Param("productId") Integer productId, @Param("operatorId") Integer operatorId, @Param("userPhone") String userPhone);
+
+	List<MmProductOrderEntity> queryPhSuspendRecord(Pagination page, @Param("operatorId") int operatorId, @Param("productId") int productId);
 }
