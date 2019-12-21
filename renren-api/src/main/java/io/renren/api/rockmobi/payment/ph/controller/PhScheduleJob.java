@@ -42,9 +42,20 @@ public class PhScheduleJob {
      * 菲律宾smart自动续订
      * 内部逻辑只是将昨天的3-0和3-1订单自动生成续订记录；
      * 因为CDP不会发送扣费成功通知，只发送扣费失败通知
+     * 定时任务执行时间：
+     * 2019-12-22 01:00:00
+     * 2019-12-23 01:00:00
+     * 2019-12-24 01:00:00
+     * 2019-12-25 01:00:00
+     * 2019-12-26 01:00:00
+     * 2019-12-27 01:00:00
+     * 2019-12-28 01:00:00
+     * 2019-12-29 01:00:00
+     * 2019-12-30 01:00:00
+     * 2019-12-31 01:00:00
+     *
      */
-    @Scheduled(cron = "0 0 16 * * ?")
-//    @Scheduled(cron = "0 15 6 * * ?")
+    @Scheduled(cron = "0 0 3 1/1 * ?  ")
     public void autoRenewJob_smart() {
         String lock_key = "smart_lock_20191218_16";
         RLock rLock = redissonService.getLock(lock_key);
