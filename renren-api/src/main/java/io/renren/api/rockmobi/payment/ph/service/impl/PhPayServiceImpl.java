@@ -369,11 +369,11 @@ public class PhPayServiceImpl implements PhPayService {
 
 		String subUrl = "http://203.87.166.59:8312/1/smsmessaging/outbound/"+senderAddress+"/subscriptions";
 		String json = JSONObject.parseObject(JSON.toJSONString(mapDrs)).toJSONString();
-		String result = HttpUtil.doPostSmsSub(subUrl, json, smsSpPassword, "00"+smsServiceId, smsProductId, "outbound", null);
+		String result = HttpUtil.doPostSmsSub(subUrl, json, smsSpPassword, "00"+smsServiceId, smsProductId, "outbound", "639334721171");
 		JSONObject jsonObject = JSONObject.parseObject(result);
 		JSONObject jsonObj = jsonObject.getJSONObject("resourceReference");
 		if(!StringUtils.isEmpty(jsonObj)){
-			System.out.println(jsonObj);
+			System.out.println(jsonObject);
 		}else{
 			//处理返回的错误信息
 		}

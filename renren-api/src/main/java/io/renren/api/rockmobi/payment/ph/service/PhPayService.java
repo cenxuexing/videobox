@@ -71,7 +71,7 @@ public interface PhPayService {
 	String inboundSmsRetrieveAndDel();
 
 	/**
-	 * 出站SMS消息传递通知订阅
+	 * When sending a single message,出站SMS消息传递通知订阅
 	 * @return
 	 */
 	String outBoundSmsSub();
