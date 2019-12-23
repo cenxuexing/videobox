@@ -356,9 +356,9 @@ public class PhPayServiceImpl implements PhPayService {
 	public String outBoundSmsSub() {
 		String senderAddress = null;
 		Map map = Maps.newHashMap();
-		map.put("notifyURL", "http://10.138.38.139:9080/notify");
+		map.put("notifyURL", "http://rpsmapi.uarocky.com/renren-api/ph/notify/client/delivery/status/json");
 		map.put("callbackData", "hello word!");
-		map.put("notificationFormat", "json");
+		map.put("notificationFormat", "JSON");
 
 		Map mapSad = Maps.newHashMap();
 		mapSad.put("callbackReference", map);
