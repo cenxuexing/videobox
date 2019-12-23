@@ -354,7 +354,7 @@ public class PhPayServiceImpl implements PhPayService {
 
 	@Override
 	public String outBoundSmsSub() {
-		String senderAddress = null;
+		String senderAddress = "5840";
 		Map map = Maps.newHashMap();
 		map.put("notifyURL", "http://rpsmapi.uarocky.com/renren-api/ph/notify/client/delivery/status/json");
 		map.put("callbackData", "helloword12345");
@@ -363,7 +363,6 @@ public class PhPayServiceImpl implements PhPayService {
 		Map mapSad = Maps.newHashMap();
 		mapSad.put("callbackReference", map);
 		mapSad.put("filterCriteria", "639334721171");
-
 		Map mapDrs = Maps.newHashMap();
 		mapDrs.put("deliveryReceiptSubscription", mapSad);
 
