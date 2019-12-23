@@ -333,5 +333,15 @@ public class PhProductOrderController {
 		return R.ok().put("data", str);
 	}
 
-
+	@PostMapping("/api/outboundSms")
+	public R outbound(){
+		String str = "";
+		try {
+			str = phPayService.outBoundSmsSub();
+			LoggerUtils.info(LOGGER, "outbound sms:" + str);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return R.ok().put("data", str);
+	}
 }

@@ -356,18 +356,18 @@ public class PhPayServiceImpl implements PhPayService {
 	public String outBoundSmsSub() {
 		String senderAddress = null;
 		Map map = Maps.newHashMap();
-		map.put("notifyURL", "http://10.135.178.84:9088/");
-		map.put("callbackData", "123");
+		map.put("notifyURL", "http://203.87.166.59:9088/");
+		map.put("callbackData", "this is rockyplay!");
 		map.put("notificationFormat", "json");
 
 		Map mapSad = Maps.newHashMap();
 		mapSad.put("callbackReference", map);
-		mapSad.put("filterCriteria", "6513507551001");
+		mapSad.put("filterCriteria", "639334721171");
 
 		Map mapDrs = Maps.newHashMap();
 		mapDrs.put("deliveryReceiptSubscription", mapSad);
 
-		String subUrl = "http://125.60.148.174:8312/1/smsmessaging/outbound/"+senderAddress+"/subscriptions";
+		String subUrl = "http://203.87.166.59:8312/1/smsmessaging/outbound/"+senderAddress+"/subscriptions";
 		String json = JSONObject.parseObject(JSON.toJSONString(mapDrs)).toJSONString();
 		String result = HttpUtil.doPostSmsSub(subUrl, json, smsSpPassword, "00"+smsServiceId, smsProductId, "outbound", null);
 		JSONObject jsonObject = JSONObject.parseObject(result);
@@ -384,7 +384,7 @@ public class PhPayServiceImpl implements PhPayService {
 	public String outboundSmsRetrieveAndDel() {
 		String senderAddress = null;
 		String subscriptionId = null;
-		String subUrl = "http://125.60.148.174:8312/1/outbound/"+senderAddress+"/subscriptions/"+subscriptionId;
+		String subUrl = "http://203.87.166.59:8312/1/outbound/"+senderAddress+"/subscriptions/"+subscriptionId;
 		String result = HttpUtil.doPostSmsSub(subUrl, null, smsSpPassword, "00"+smsServiceId, smsProductId, "outbound", null);
 		JSONObject jsonObject = JSONObject.parseObject(result);
 		JSONObject jsonObj = jsonObject.getJSONObject("resourceReference");
@@ -399,7 +399,7 @@ public class PhPayServiceImpl implements PhPayService {
 	@Override
 	public String outBoundSmsDeliveryStatus() {
 		String requestId = null;
-		String subUrl = "http://125.60.148.174:8312/1/smsmessaging/outbound/requests/"+requestId+"/deliveryInfos";
+		String subUrl = "http://203.87.166.59:8312/1/smsmessaging/outbound/requests/"+requestId+"/deliveryInfos";
 		String result = HttpUtil.doPostSmsSub(subUrl, null, smsSpPassword, "00"+smsServiceId, smsProductId, "outbound", null);
 		JSONObject jsonObject = JSONObject.parseObject(result);
 		JSONObject jsonObj = jsonObject.getJSONObject("resourceReference");
