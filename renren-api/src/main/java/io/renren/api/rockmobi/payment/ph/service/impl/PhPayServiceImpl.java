@@ -366,7 +366,7 @@ public class PhPayServiceImpl implements PhPayService {
 		Map mapDrs = Maps.newHashMap();
 		mapDrs.put("deliveryReceiptSubscription", mapSad);
 
-		String subUrl = "http://203.87.166.59:8312/1/smsmessaging/outbound/"+senderAddress+"/subscriptions";
+		String subUrl = "http://203.87.166.59:8312/1/smsmessaging/outbound/"+senderAddress+"/requests";
 		String json = JSONObject.parseObject(JSON.toJSONString(mapDrs)).toJSONString();
 		String result = HttpUtil.doPostSmsSub(subUrl, json, smsSpPassword, "00"+smsServiceId, smsProductId, "outbound", "639334721171");
 		JSONObject jsonObject = JSONObject.parseObject(result);
