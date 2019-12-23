@@ -357,7 +357,7 @@ public class PhPayServiceImpl implements PhPayService {
 		String senderAddress = null;
 		Map map = Maps.newHashMap();
 		map.put("notifyURL", "http://rpsmapi.uarocky.com/renren-api/ph/notify/client/delivery/status/json");
-		map.put("callbackData", "hello word!");
+		map.put("callbackData", "hello_word!");
 		map.put("notificationFormat", "JSON");
 
 		Map mapSad = Maps.newHashMap();
