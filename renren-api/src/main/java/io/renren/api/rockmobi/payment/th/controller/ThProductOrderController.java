@@ -104,7 +104,7 @@ public class ThProductOrderController {
 	@ApiOperation(value = "获取用的订购状态", response = UserChargeStateVo.class)
 	public R getUserChargeState(@RequestBody MerchantProductOperAtorBO merchantProductOperAtorBo, HttpServletRequest req) {
 
-		LoggerUtils.info(LOGGER, "获取用户订购状态任务开始:" + JSON.toJSONString(merchantProductOperAtorBo) + " " + req);
+		LOGGER.info("获取用户订购状态任务开始:{},req={}" , JSON.toJSONString(merchantProductOperAtorBo) , req);
 
 		ValidatorUtils.validateEntity(merchantProductOperAtorBo);
 
@@ -118,12 +118,12 @@ public class ThProductOrderController {
 		}
 		merchantProductOperAtorBo.setUserMsisdn(msisdn);
 
-		LoggerUtils.info(LOGGER, "校验用户是否已经开通：" + msisdn);
+		LOGGER.info("校验用户是否已经开通：{}" , msisdn);
 
 		// 查询产品信息
 		MmProductEntity mpe = mmProductService.queryProductByCode(merchantProductOperAtorBo.getProductCode());
 		if (mpe == null) {
-			LoggerUtils.info(LOGGER, "无效产品编号：" + merchantProductOperAtorBo.getProductCode());
+			LOGGER.info( "无效产品编号：{}" + merchantProductOperAtorBo.getProductCode());
 			throw new I18NException(ErrorCodeTemp.CODE_9006);// 无效产品编码
 		}
 
@@ -136,7 +136,7 @@ public class ThProductOrderController {
 			UserEntity ue = userService.queryByMobile(merchantProductOperAtorBo.getUserMsisdn());
 			if (ue == null) {
 				// 如果订阅数据有，但是用户表没有，则用户信息有问题
-				LoggerUtils.info(LOGGER, "订阅数据有，但是用户表没有，则用户信息有问题，用户" + mm.getUserPhone() + "身份信息保存异常....");
+				LOGGER.info( "订阅数据有，但是用户表没有，则用户信息有问题，用户:{}身份信息保存异常...." ,mm.getUserPhone());
 				throw new I18NException(ErrorCodeTemp.CODE_9004);
 			}
 
@@ -168,7 +168,7 @@ public class ThProductOrderController {
 	@PostMapping("/api/otp/generating")
 	@ApiOperation(value = "泰国CAT发起订阅请求", response = PhProductOperAtorBO.class)
 	public R otpGenerating(@RequestBody MerchantProductOperAtorBO merchantProductOperAtorBo, HttpServletRequest req) {
-		LoggerUtils.info(LOGGER, "泰国CAT发起订阅任务开始:" + JSON.toJSONString(merchantProductOperAtorBo) + " " + req);
+		LOGGER.info( "泰国CAT发起订阅任务开始:{},req={}" , JSON.toJSONString(merchantProductOperAtorBo) , req);
 
 		ValidatorUtils.validateEntity(merchantProductOperAtorBo);
 		R r = null;
@@ -176,7 +176,7 @@ public class ThProductOrderController {
 			String userMsisdn = merchantProductOperAtorBo.getUserMsisdn();
 			// 检查用户短信验证码输入是否正确
 			if (userMsisdn == null || "".equals(userMsisdn)) {
-				LoggerUtils.error(LOGGER, "用户[" + userMsisdn + "]信息不存在");
+				LOGGER.error("用户[{}]信息不存在",userMsisdn);
 				//throw new I18NException(ErrorCodeTemp.CODE_9004);//用户信息不存在
 				return R.error(ErrorCodeTemp.CODE_9004, "User information does not exist");
 			}
@@ -192,7 +192,7 @@ public class ThProductOrderController {
 						return R.ok().put("msg", optGenerating);
 					}else{
 						String errorMsg = ErrorCodeEnum.getDescByCode(String.valueOf(optGenerating.getStatus()));
-						if(optGenerating.getStatus().equals("653")){
+						if("653".equals(optGenerating.getStatus())){
 							return R.error().put("msg", errorMsg).put("code",653);
 						}else{
 							return R.error().put("msg",errorMsg).put("code",optGenerating.getStatus());
@@ -202,7 +202,7 @@ public class ThProductOrderController {
 			}
 
 		} catch (I18NException e) {
-			LoggerUtils.info(LOGGER, "泰国OTP生成请求异常，异常原因：" + e.getMessage());
+			LOGGER.error( "泰国OTP生成请求异常，异常原因:{}" , e.getMessage());
 		} finally {
 			redissonService.unlock(merchantProductOperAtorBo.getUserMsisdn());
 		}
@@ -212,7 +212,7 @@ public class ThProductOrderController {
 	@PostMapping("/api/charge")
 	@ApiOperation(value = "泰国CAT发起扣费请求", response = PhProductOperAtorBO.class)
 	public R charge(@RequestBody ChargingReq chargingReq){
-		LoggerUtils.info(LOGGER, "泰国CAT发起扣费请求开始:" + JSON.toJSONString(chargingReq));
+		LOGGER.info("泰国CAT发起扣费请求开始:{}" , JSON.toJSONString(chargingReq));
 
 		R r = null;
 		try {
@@ -236,7 +236,7 @@ public class ThProductOrderController {
 			}
 
 		} catch (Exception e) {
-			LoggerUtils.error(LOGGER, "泰国CAT发起扣费请求异常，异常原因：" + e.getMessage());
+			LOGGER.error("泰国CAT发起扣费请求异常，异常原因：{}" , e.getMessage());
 		} finally {
 			redissonService.unlock(chargingReq.getPhoneNo());
 		}

@@ -5,39 +5,25 @@
 
 package io.renren.api.rockmobi.payment.th.service.impl;
 
-import com.baomidou.mybatisplus.mapper.Condition;
 import io.renren.api.rockmobi.payment.th.service.ThOrderService;
 import io.renren.api.rockmobi.user.entity.UserEntity;
 import io.renren.api.rockmobi.user.service.UserService;
 import io.renren.common.constant.CommonConstant;
-import io.renren.common.enums.ChannelNotifyStateEnum;
 import io.renren.common.enums.OrderStatusEnum;
 import io.renren.common.enums.OrderTypeEnum;
 import io.renren.common.enums.TableStatusEnum;
 import io.renren.common.utils.DateUtils;
 import io.renren.common.utils.LoggerUtils;
 import io.renren.common.utils.SerialNumberUtils;
-import io.renren.common.utils.UUIDUtils;
-import io.renren.common.validator.Assert;
-import io.renren.dao.MmProductOrderDao;
-import io.renren.entity.MmMerchantEntity;
-import io.renren.entity.MmOperatorEntity;
 import io.renren.entity.MmProductEntity;
 import io.renren.entity.MmProductOrderEntity;
-import io.renren.entity.bo.MerchantProductOperAtorBO;
-import io.renren.service.MmMerchantService;
-import io.renren.service.MmOperatorService;
 import io.renren.service.MmProductOrderService;
-import io.renren.service.MmProductService;
 import org.apache.commons.codec.digest.DigestUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-
-import java.util.ArrayList;
 import java.util.Date;
-import java.util.List;
 import java.util.Map;
 
 /**
@@ -60,7 +46,7 @@ public class ThOrderServiceImpl implements ThOrderService {
 
     @Override
     public void createIndiaReNewWal(MmProductEntity mmProductEntity, Date updateTime, String userPhone, String thirdSerialId, Map<String, String> reNewParam, Integer orderState, Integer orderType) {
-        LoggerUtils.info(LOGGER, "续订订单开始生成");
+        LOGGER.info( "泰国Cat续订订单开始生成开始>>>>>>>>>>>>>>>>>");
         Date activeDate = new Date();
         String orderNum = serialNumberUtils.createProductOrderCode();
         MmProductOrderEntity mpe = new MmProductOrderEntity();
@@ -97,11 +83,12 @@ public class ThOrderServiceImpl implements ThOrderService {
             user.setCreateTime(updateTime);
             userService.insert(user);
         }
+        LOGGER.info( "泰国Cat续订订单开始生成结束>>>>>>>>>>>>>>>>>");
     }
 
     @Override
     public void createIndiaUnSubScribe(MmProductEntity mmProductEntity, Date activeDate, String userPhone, String thirdSerialId, Map<String, String> reNewParam) {
-        LoggerUtils.info(LOGGER, userPhone+"开始添加退订记录");
+        LOGGER.info("userPhone={},开始添加退订记录开始>>>>>>>>>>>", userPhone);
         String orderNum = serialNumberUtils.createProductOrderCode();
         MmProductOrderEntity mpe = new MmProductOrderEntity();
         mpe.setProductOrderCode(orderNum);
@@ -125,9 +112,8 @@ public class ThOrderServiceImpl implements ThOrderService {
         mpe.setIsAvailable(TableStatusEnum.IN_USE.getCode());
         mpe.setExt1(reNewParam.toString());
         mpe.setThirdSerialId(thirdSerialId);
-        LoggerUtils.info(LOGGER, "insert订单之前");
         mmProductOrderService.insert(mpe);
-        LoggerUtils.info(LOGGER, "insert订单之后");
+        LOGGER.info("userPhone={},添加退订记录结束>>>>>>>>>>>", userPhone);
         // 根据用户的Unique 创建一个临时的用户数据
         UserEntity ue = userService.queryByMobile(mpe.getUserPhone());
         if (ue == null) {
