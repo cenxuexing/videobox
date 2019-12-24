@@ -29,6 +29,7 @@ public class XmlUtil {
     public static Map parse(String soap) throws DocumentException {
         Document doc = DocumentHelper.parseText(soap);//报文转成doc对象
         Element root = doc.getRootElement();//获取根元素，准备递归解析这个XML树
+        map = new HashMap<>(); // fix bug: 防止上一个map的属性残留到下次解析结果中
         getCode(root);
         return map;
     }
