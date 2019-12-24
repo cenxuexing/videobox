@@ -75,7 +75,7 @@ ph:
     server_id: 64092000011915
     product_id: 1000030491
     sub_url: http://203.87.166.59:8310/SubscribeManageService/services/SubscribeManage
-    notify_url: 10.111.40.200/renren-api/ph/sync/sms/order/relation
+    notify_url: http://10.111.40.200/renren-api/ph/sync/sms/order/relation
     lp_url: http://rpsmwap.uarocky.com/phgame/?1=1
   sun:
     sp_password: 0lS90z2h
@@ -89,7 +89,7 @@ ph:
     product_id: 1000030489
     sub_url: http://203.87.166.59:8310/SubscribeManageService/services/SubscribeManage
     #这个试订单同步地址，需要跟SDP一致，不能随意变更
-    notify_url: 10.111.40.200/renren-api/sun/sync/order/relation
+    notify_url: http://10.111.40.200/renren-api/sun/sync/order/relation
     lp_url: http://rpsmwap.uarocky.com/sungame/?1=1
 
 th:
