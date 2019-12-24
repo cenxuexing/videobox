@@ -7,6 +7,7 @@ package io.renren.api.rockmobi.payment.ph.controller;
 
 import io.renren.api.rockmobi.payment.ph.model.vo.ClientNotifyInboundSmsVO;
 import io.renren.api.rockmobi.payment.ph.model.vo.PhResultResponse;
+import io.renren.api.rockmobi.payment.ph.model.vo.sms.outbound.DeliveryInfo;
 import io.renren.api.rockmobi.payment.ph.model.vo.sms.outbound.DeliveryInfoNotification;
 import io.renren.api.rockmobi.payment.ph.model.vo.sms.outbound.OutBoundCellbackReq;
 import io.renren.api.rockmobi.payment.ph.phenum.SyncResultCodeEnum;
@@ -14,7 +15,10 @@ import io.renren.api.rockmobi.payment.ph.service.PhPayService;
 import io.renren.api.rockmobi.payment.ph.service.impl.NotifyPhOrderTask;
 import io.renren.api.rockmobi.payment.ph.util.HttpUtil;
 import io.renren.api.rockmobi.payment.ph.util.XmlUtil;
+import io.renren.common.enums.OrderStatusEnum;
 import io.renren.common.utils.LoggerUtils;
+import io.renren.entity.MmProductOrderEntity;
+import io.renren.service.MmProductOrderService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -31,9 +35,7 @@ import com.alibaba.fastjson.JSON;
 
 import javax.servlet.http.HttpServletRequest;
 import java.io.InputStream;
-import java.util.Enumeration;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
 
 /**
  * @author 闫迎军(YanYingJun)
@@ -53,6 +55,8 @@ public class PhNotifyController {
 	 */
 	@Autowired
 	private ThreadPoolTaskExecutor taskExecutor;
+	@Autowired
+	private MmProductOrderService mmProductOrderService;
 
 	/**
 	 * WAP订阅异步通知
@@ -188,10 +192,36 @@ public class PhNotifyController {
 //	@RequestMapping(value = "/notify/client/delivery/status/json", method = { RequestMethod.GET, RequestMethod.POST })
 	@PostMapping("/notify/client/delivery/status/json")
 	public void phClientSmsDeliveryStatusJson(@RequestBody OutBoundCellbackReq outBoundCellbackReq,HttpServletRequest request) {
-		
-		LOGGER.info("request uri is {}", request.getRequestURI());
-		LOGGER.info("ph Send SMS cellback parameters:",JSON.toJSONString(outBoundCellbackReq));
-		
+		LOGGER.info("ph扣费，通知结果:{}", JSON.toJSONString(outBoundCellbackReq));
+		try {
+			// 处理续订通知 & 初订通知，成功后此处生成订单
+			List<DeliveryInfo> deliveryInfo = outBoundCellbackReq.getDeliveryInfoNotification().getDeliveryInfo();
+			DeliveryInfo info = deliveryInfo.get(0);
+			String deliveryStatus = info.getDeliveryStatus();
+			Integer orderId = Integer.parseInt(info.getCallbackData());
+			if ("DeliveredToTerminal".equals(deliveryStatus) || "DeliveryNotificationNotSupported".equals(deliveryStatus)) {
+				// 扣费成功
+				MmProductOrderEntity orderEntity = new MmProductOrderEntity();
+				orderEntity.setId(orderId);
+				orderEntity.setOrderState(OrderStatusEnum.CHARGED.getCode());
+				orderEntity.setUpdateTime(new Date());
+				orderEntity.setPayEndTime(new Date());
+				mmProductOrderService.updateById(orderEntity);
+				LOGGER.info("ph扣费成功，更新订单oderId:{}", orderId);
+			} else if ("DeliveryImpossible".equals(deliveryStatus)) {
+				// 扣费失败
+				MmProductOrderEntity orderEntity = new MmProductOrderEntity();
+				orderEntity.setId(orderId);
+				orderEntity.setOrderState(OrderStatusEnum.FAILED.getCode());
+				orderEntity.setUpdateTime(new Date());
+				mmProductOrderService.updateById(orderEntity);
+				LOGGER.info("ph扣费失败，更新订单oderId:{}，errorSource:{}", orderId, info.getErrorSource());
+			} else {
+				LOGGER.error("ph扣费，未知的扣费通知状态：{}", deliveryStatus);
+			}
+		} catch (NumberFormatException e) {
+			LOGGER.error("ph扣费，处理扣费通知发生异常", e);
+		}
 //		return "jsonInterfaceCallSuccessful";
 	}
 	

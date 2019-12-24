@@ -12,6 +12,7 @@ public enum OrderStatusEnum {
 	CHARGED(3, "已订阅"), //
 	DENIED(4, "已到期,停止服务"), //
 	REFUNDED(5, "已退订"), //
+	SUSPEND(6, "Suspend"), //
 
 	TIMEOUT(9, "超时取消"), //
 	FAILED(-1, "处理失败"), //

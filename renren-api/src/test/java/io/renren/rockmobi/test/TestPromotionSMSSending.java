@@ -6,21 +6,15 @@
 package io.renren.rockmobi.test;
 
 import com.alibaba.fastjson.JSON;
-import com.alibaba.fastjson.JSONObject;
-import com.google.common.collect.Maps;
-import io.renren.api.rockmobi.payment.ph.model.vo.*;
 import io.renren.api.rockmobi.payment.ph.service.PhPayService;
 import io.renren.api.rockmobi.payment.ph.util.HttpUtil;
 import io.renren.api.rockmobi.payment.th.model.vo.ChargeRecurringResp;
-import io.renren.api.rockmobi.payment.th.model.vo.SendSmsResp;
 import io.renren.api.rockmobi.payment.th.service.ThOrderService;
 import io.renren.api.rockmobi.payment.th.service.ThPayService;
 import io.renren.api.rockmobi.payment.th.util.MapUtil;
 import io.renren.common.enums.OrderStatusEnum;
 import io.renren.common.enums.OrderTypeEnum;
 import io.renren.common.utils.DateUtils;
-import io.renren.common.utils.LoggerUtils;
-import io.renren.common.utils.RandomUtil;
 import io.renren.entity.MmMerchantEntity;
 import io.renren.entity.MmProductEntity;
 import io.renren.entity.MmProductOrderEntity;
@@ -42,7 +36,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
-import org.springframework.util.StringUtils;
 
 import java.io.UnsupportedEncodingException;
 import java.nio.charset.Charset;
@@ -268,7 +261,7 @@ public class TestPromotionSMSSending {
     @Test
     public void test006(){
         try {
-            String str = phPayService.smsOutBoundSubscribeProductRequest("9991832535");
+            String str = phPayService.smsOutBoundSubscribeProductRequest("9991832535", null);
             System.out.println(str);
         }catch (Exception e){
             e.printStackTrace();

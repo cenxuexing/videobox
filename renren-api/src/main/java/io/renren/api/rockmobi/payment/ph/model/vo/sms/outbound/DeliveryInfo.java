@@ -13,6 +13,7 @@ public class DeliveryInfo implements Serializable {
 
 	private String address;
 	private String deliveryStatus;
+	private String callbackData;
 	private String ErrorCode;
 	private String ErrorSource;
 
@@ -34,6 +35,14 @@ public class DeliveryInfo implements Serializable {
 
 	public void setErrorCode(String ErrorCode) {
 		this.ErrorCode = ErrorCode;
+	}
+
+	public String getCallbackData() {
+		return callbackData;
+	}
+
+	public void setCallbackData(String callbackData) {
+		this.callbackData = callbackData;
 	}
 
 	@JsonProperty("ErrorCode")

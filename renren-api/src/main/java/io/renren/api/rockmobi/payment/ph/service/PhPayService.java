@@ -35,7 +35,7 @@ public interface PhPayService {
 	 * @return
 	 * @throws Exception
 	 */
-	String smsOutBoundSubscribeProductRequest(String phoneNo) throws Exception;
+	String smsOutBoundSubscribeProductRequest(String phoneNo, Integer orderId) throws Exception;
 
 	/**
 	 * 订阅MO SMS消息通知

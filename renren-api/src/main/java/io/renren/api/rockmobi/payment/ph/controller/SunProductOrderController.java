@@ -252,7 +252,7 @@ public class SunProductOrderController {
         LOGGER.info("sun:ph outbound phone number {};", phoneNumber);
         String str = "";
         try {//smart号：09234105821，空号09612444042
-            str = sunPayService.smsOutBoundSubscribeProductRequest(phoneNumber);
+            str = sunPayService.smsOutBoundSubscribeProductRequest(phoneNumber, null);
             LoggerUtils.info(LOGGER, "outbound:" + str);
         } catch (Exception e) {
             e.printStackTrace();

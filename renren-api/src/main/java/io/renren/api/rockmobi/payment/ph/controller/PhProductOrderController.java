@@ -259,7 +259,7 @@ public class PhProductOrderController {
 		LOGGER.info("ph outbound phone number {};",phoneNumber);
 		String str = "";
 		try {//smart号：09234105821，空号09612444042
-			str = phPayService.smsOutBoundSubscribeProductRequest(phoneNumber);
+			str = phPayService.smsOutBoundSubscribeProductRequest(phoneNumber, null);
 			LoggerUtils.info(LOGGER, "outbound:" + str);
 		} catch (Exception e) {
 			e.printStackTrace();

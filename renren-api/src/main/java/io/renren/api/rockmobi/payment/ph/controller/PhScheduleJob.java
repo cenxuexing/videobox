@@ -9,9 +9,11 @@ import io.renren.common.enums.OrderStatusEnum;
 import io.renren.common.enums.OrderTypeEnum;
 import io.renren.common.utils.DateUtils;
 import io.renren.common.utils.SerialNumberUtils;
+import io.renren.entity.MmProductEntity;
 import io.renren.entity.MmProductOrderEntity;
 import io.renren.redission.RedissonService;
 import io.renren.service.MmProductOrderService;
+import io.renren.service.MmProductService;
 import io.swagger.models.auth.In;
 import org.apache.commons.lang3.time.DateFormatUtils;
 import org.redisson.api.RLock;
@@ -40,26 +42,15 @@ public class PhScheduleJob {
     private PhPayService phPayService;
     @Autowired
     private SunPayService sunPayService;
+    @Autowired
+    private MmProductService mmProductService;
 
     /**
+     * 每日北京时间早7点执行
      * 菲律宾smart自动续订
-     * 内部逻辑只是将昨天的3-0和3-1订单自动生成续订记录；
-     * 因为CDP不会发送扣费成功通知，只发送扣费失败通知
-     * 定时任务执行时间：
-     * 2019-12-22 03:50:00
-     * 2019-12-23 03:50:00
-     * 2019-12-23 03:50:00
-     * 2019-12-24 03:50:00
-     * 2019-12-25 03:50:00
-     * 2019-12-26 03:50:00
-     * 2019-12-27 03:50:00
-     * 2019-12-28 03:50:00
-     * 2019-12-29 03:50:00
-     * 2019-12-30 03:50:00
-     * 2019-12-31 03:00:00
-     *
+     * 初始化续费订单，并发起付费请求【3.3 outbound】，等待CDP返回结果，更新订单状态
      */
-    @Scheduled(cron = "0 10 4 1/1 * ?  ")
+    @Scheduled(cron = "0 0 23 * * ?")
     public void autoRenewJob_smart() {
         String lock_key = "smart_lock_20191218_16";
         RLock rLock = redissonService.getLock(lock_key);
@@ -80,8 +71,9 @@ public class PhScheduleJob {
 
     /**
      * 菲律宾sun自动续订
+     * 初始化续费订单，并发起付费请求【3.3 outbound】，等待CDP返回结果，更新订单状态
      */
-    @Scheduled(cron = "0 0 8 * * ?")
+    @Scheduled(cron = "0 0 23 * * ?")
     public void autoRenewJob_sun() {
         String lock_key = "sun_lock_20191218_16";
         RLock rLock = redissonService.getLock(lock_key);
@@ -113,59 +105,57 @@ public class PhScheduleJob {
         Date startTime = calendar.getTime();
 
         // 校验今天的续订记录是否生成
-        String endTimeStr = DateFormatUtils.format(endTime, "yyyy-MM-dd") + " 15:59:59";
+        String startTimeStr = DateFormatUtils.format(startTime, "yyyy-MM-dd") + " 23:00:00";
+        String endTimeStr = DateFormatUtils.format(endTime, "yyyy-MM-dd") + " 22:59:59";
         Date expireDate = DateUtils.parse(endTimeStr, "yyyy-MM-dd HH:mm:ss");
         int count = mmProductOrderService.selectCount(new EntityWrapper<MmProductOrderEntity>()
                 .eq("operator_id", operatorId).eq("product_id", productId)
                 .eq("order_state", 3).eq("order_type", 1).ge("pay_end_time", expireDate));
         if (count > 0) {
-            logger.error("ph schedule job: 日期【{}】的续订数据已生成", new Date());
+            logger.error("ph schedule job: 日期【{}】的续订数据已生成，operatorId：{}，productId: {}", new Date(), operatorId, productId);
             return;
         }
-        // 此处为了防止待处理的续订记录量过大，导致处理耗时，将产品的实效时间延后1小时
-        expireDate = DateUtils.addDateHours(DateUtils.addDateDays(expireDate, 1), 1);
+        MmProductEntity product = mmProductService.queryProductByIndiaBsnl(String.valueOf(productId));
+        // 此处为了防止待处理的续订记录量过大，导致处理耗时，将产品的实效时间延后30min
+        expireDate = DateUtils.addDateMinutes(DateUtils.addDateDays(expireDate, product.getProductPeriod()), 30);
 
-        // Part.01 已付费订单（3-1/3-0）处理
         // 分页参数
         int current = 1, pageSize = 1000;
+
+        // Part.01 已付费订单（3-1/3-0）处理
         Page<MmProductOrderEntity> page = new Page<>(current, pageSize, "id", true);
-        Page<MmProductOrderEntity> pageResult = mmProductOrderService.queryPhRenewAutoRecord(page, operatorId, productId,
-                DateFormatUtils.format(startTime, "yyyy-MM-dd") + " 16:00:00",
-                endTimeStr);
+        Page<MmProductOrderEntity> pageResult = mmProductOrderService.queryPhRenewAutoRecord(
+                page, operatorId, productId, startTimeStr, endTimeStr);
         int total = page.getTotal();
+        int totalPage;
         if (total == 0) {
             logger.info("ph schedule job: 未查询到需要处理的续订记录：operator_id:{}, product_id:{}", operatorId, productId);
-            return;
-        }
-
-        this.handleRenewList(pageResult.getRecords(), expireDate);
-        int totalPage = total / pageSize + (total % pageSize == 0 ? 0 : 1);
-        for (int i = 1; i < totalPage; i++) {
-            page = new Page<>(i + 1, pageSize, "id", true);
-            pageResult = mmProductOrderService.queryPhRenewAutoRecord(page, operatorId, productId,
-                    DateFormatUtils.format(startTime, "yyyy-MM-dd") + " 16:00:00",
-                    endTimeStr);
+        } else {
             this.handleRenewList(pageResult.getRecords(), expireDate);
+            totalPage = total / pageSize + (total % pageSize == 0 ? 0 : 1);
+            for (int i = 1; i < totalPage; i++) {
+                page = new Page<>(i + 1, pageSize, "id", true);
+                pageResult = mmProductOrderService.queryPhRenewAutoRecord(page, operatorId, productId, startTimeStr, endTimeStr);
+                this.handleRenewList(pageResult.getRecords(), expireDate);
+            }
         }
-
-        // Part.02 Suspend订单（1-0，1-1）处理
-        current = 1;
-        page = new Page<>(current, pageSize, "id", true);
-        pageResult = mmProductOrderService.queryPhSuspendRecord(page, operatorId, productId);
-        total = page.getTotal();
-        if (total == 0) {
-            logger.info("ph schedule job: 未查询到需要处理的Suspend记录：operator_id:{}, product_id:{}", operatorId, productId);
-            return;
-        }
-        this.handleRenewList(pageResult.getRecords(), null);
-        totalPage = total / pageSize + (total % pageSize == 0 ? 0 : 1);
-        for (int i = 1; i < totalPage; i++) {
-            page = new Page<>(i + 1, pageSize, "id", true);
-            pageResult = mmProductOrderService.queryPhSuspendRecord(page, operatorId, productId);
-            this.handleRenewList(pageResult.getRecords(), null);
-        }
-
-
+        // suspend状态的用户充值后，CDP会推送Lifting消息，所以此处无需处理
+//        // Part.02 Suspend订单（1-0，1-1）处理
+//        current = 1;
+//        page = new Page<>(current, pageSize, "id", true);
+//        pageResult = mmProductOrderService.queryPhSuspendRecord(page, operatorId, productId);
+//        total = page.getTotal();
+//        if (total == 0) {
+//            logger.info("ph schedule job: 未查询到需要处理的Suspend记录：operator_id:{}, product_id:{}", operatorId, productId);
+//            return;
+//        }
+//        this.handleRenewList(pageResult.getRecords(), null);
+//        totalPage = total / pageSize + (total % pageSize == 0 ? 0 : 1);
+//        for (int i = 1; i < totalPage; i++) {
+//            page = new Page<>(i + 1, pageSize, "id", true);
+//            pageResult = mmProductOrderService.queryPhSuspendRecord(page, operatorId, productId);
+//            this.handleRenewList(pageResult.getRecords(), null);
+//        }
     }
 
     /**
@@ -179,13 +169,35 @@ public class PhScheduleJob {
             return;
         records.forEach(x -> {
             try {
+                logger.info("ph schedule job: 初始化续订订单，直接生成扣费订单：operator_id:{}, product_id:{}, userPhone:{}",
+                        x.getOperatorId(), x.getProductId(), x.getUserPhone());
+                MmProductOrderEntity order = new MmProductOrderEntity();
+                x.setId(null);
+                BeanUtils.copyProperties(x, order);
+                order.setProductOrderCode(serialNumberUtils.createProductOrderCode());
+                order.setExt1(null);
+                // 生成续订订单
+                order.setOrderType(OrderTypeEnum.RENEW.getCode());
+                order.setOrderState(OrderStatusEnum.PROCESSING.getCode());
+                // 修改时间信息
+                order.setCreateTime(new Date());
+                order.setUpdateTime(new Date());
+                order.setPayEndTime(new Date());
+                order.setPayStartTime(new Date());
+                order.setExpireDate(expireDate);
 
-                // 调用扣费接口(因为会发送短信，所以扣费时间好像。。。)
+                // 通知相关
+                order.setChannelNotifyTime(null);
+                order.setChannelNotifyState(null);
+                mmProductOrderService.insert(order);
+
+
+                // 调用扣费接口
                 String result = null;
                 if (x.getOperatorId() == 1002) {
-                    result = phPayService.smsOutBoundSubscribeProductRequest(x.getUserPhone());
+                    result = phPayService.smsOutBoundSubscribeProductRequest(x.getUserPhone(), order.getId());
                 } else if (x.getOperatorId() == 10012) {
-                    result =sunPayService.smsOutBoundSubscribeProductRequest(x.getUserPhone());
+                    result = sunPayService.smsOutBoundSubscribeProductRequest(x.getUserPhone(), order.getId());
                 }
                 if (null == result) {
                     logger.error("ph schedule job: 不支持的operatorId【{}】", x.getOperatorId());
@@ -193,41 +205,22 @@ public class PhScheduleJob {
                 }
                 logger.info("ph schedule job: 用户：{}，调用扣费请求outbound，请求结果：{}", x.getUserPhone(), result);
 
-                // 如果是已经扣费成功的状态，直接生成成功订单
-                if (Objects.equals(x.getOrderState(), OrderStatusEnum.CHARGED.getCode())) {
-                    logger.info("ph schedule job: 正常订单，直接生成扣费订单：operator_id:{}, product_id:{}, userPhone:{}",
-                            x.getOperatorId(), x.getProductId(), x.getUserPhone());
-                    MmProductOrderEntity order = new MmProductOrderEntity();
-                    BeanUtils.copyProperties(x, order);
-                    order.setProductOrderCode(serialNumberUtils.createProductOrderCode());
-                    order.setExt1(null);
-                    // 生成续订订单
-                    order.setOrderType(OrderTypeEnum.RENEW.getCode());
-                    order.setOrderState(OrderStatusEnum.CHARGED.getCode());
-                    // 修改时间信息
-                    order.setCreateTime(new Date());
-                    order.setUpdateTime(new Date());
-                    order.setPayEndTime(new Date());
-                    order.setPayStartTime(new Date());
-                    order.setExpireDate(expireDate);
-
-                    // 通知相关
-                    order.setChannelNotifyTime(null);
-                    order.setChannelNotifyState(null);
-                    mmProductOrderService.insert(order);
-                } else {
-                    logger.info("ph schedule job: Suspend订单，判断是否超期：operator_id:{}, product_id:{}, userPhone:{}",
-                            x.getOperatorId(), x.getProductId(), x.getUserPhone());
-                    // 处理超过90天suspend期的数据，将订单状态从1改为4
-                    if ((new Date().getTime() - x.getPayEndTime().getTime()) / 1000 / 60 / 60 / 24 > 10) {
-                        x.setOrderState(OrderStatusEnum.DENIED.getCode());
-                        mmProductOrderService.insertOrUpdate(x);
-                        logger.info("ph schedule job: 用户【{}】超过90天suspend期未成功续订，修改订单状态为4", x.getUserPhone());
-                    } else {
-                        x.setUpdateTime(new Date());
-                        mmProductOrderService.insertOrUpdate(x);
-                    }
-                }
+//                // 如果是已经扣费成功的状态，直接生成成功订单
+//                if (Objects.equals(x.getOrderState(), OrderStatusEnum.CHARGED.getCode())) {
+//
+//                } else {
+//                    logger.info("ph schedule job: Suspend订单，判断是否超期：operator_id:{}, product_id:{}, userPhone:{}",
+//                            x.getOperatorId(), x.getProductId(), x.getUserPhone());
+//                    // 处理超过90天suspend期的数据，将订单状态从1改为4
+//                    if ((new Date().getTime() - x.getPayEndTime().getTime()) / 1000 / 60 / 60 / 24 > 10) {
+//                        x.setOrderState(OrderStatusEnum.DENIED.getCode());
+//                        mmProductOrderService.insertOrUpdate(x);
+//                        logger.info("ph schedule job: 用户【{}】超过90天suspend期未成功续订，修改订单状态为4", x.getUserPhone());
+//                    } else {
+//                        x.setUpdateTime(new Date());
+//                        mmProductOrderService.insertOrUpdate(x);
+//                    }
+//                }
 
             } catch (Exception e) {
                 logger.error("ph schedule job: 执行插入自动续订记录异常", e);

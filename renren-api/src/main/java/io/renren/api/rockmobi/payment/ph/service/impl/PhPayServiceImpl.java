@@ -199,14 +199,16 @@ public class PhPayServiceImpl implements PhPayService {
 	/**
 	 * 短信订阅服务
 	 * @param phoneNo
+	 * @param orderId 关联订单id
 	 * @return
 	 * @throws Exception
 	 */
 	@Override
-	public String smsOutBoundSubscribeProductRequest(String phoneNo) throws Exception{
+	public String smsOutBoundSubscribeProductRequest(String phoneNo, Integer orderId) throws Exception{
 		CallbackReference callbackReference = new CallbackReference();
 		callbackReference.setNotifyURL(smsNotifyUrl);
-		//callbackReference.setCallbackData("123");
+		if (null != orderId)
+			callbackReference.setCallbackData(String.valueOf(orderId));
 		callbackReference.setNotificationFormat("json");
 		Map mapMsmText = Maps.newLinkedHashMap();
 		mapMsmText.put("message", "Thanks for subscribing to GAME STAGE. Play unlimited games for P5/day. Start playing via this link "+wapLpUrl+" Data charges may apply. Quit? Reply GAME OFF for free. Help? Please send email to MAXPANSHI@163.com");
@@ -223,17 +225,7 @@ public class PhPayServiceImpl implements PhPayService {
 		String json = JSONObject.parseObject(JSON.toJSONString(mapSub)).toJSONString();
 //		LoggerUtils.info(LOGGER, "菲律宾outbound请求参数>>>>>>" + json+",smsSpPassword="+smsSpPassword+",smsServiceId="+smsServiceId+",smsProductId"+smsProductId);// "0084002000008781"
 		String result = HttpUtil.doPostSmsSub(smsSubUrl, json, smsSpPassword, "00"+smsServiceId, smsProductId, "outbound", phoneNo);
-		LoggerUtils.info(LOGGER, "菲律宾outbound请求参数结果：" + result);
-//		JSONObject jsonObject = JSONObject.parseObject(result);
-//		JSONObject jsonObj = jsonObject.getJSONObject("resourceReference");
-//		if(!StringUtils.isEmpty(jsonObj)){
-//			String resourceURL = jsonObj.getString("resourceURL");
-//			if(!StringUtils.isEmpty(resourceURL)){
-//
-//			}
-//		}else{
-//			//处理返回的错误信息
-//		}
+		LOGGER.info("菲律宾outbound请求参数结果：{}", result);
 		return result;
 	}
 
@@ -290,6 +282,7 @@ public class PhPayServiceImpl implements PhPayService {
 			MmProductEntity mmProductEntity = mmProductService.queryProductByIndiaBsnl(map.get("serviceID"));
 			if(StringUtils.isEmpty(mmProductEntity)){
 				LoggerUtils.info(LOGGER, "产品信息不存在");
+				return;
 			}
 			LoggerUtils.info(LOGGER,"同步产品信息开始>>>>>>>>>>>>>"+map.toString());
 			Date updateTime = DateUtils.parse(map.get("updateTime"), DateUtils.DATE_TIME1_PATTERN);
@@ -298,22 +291,20 @@ public class PhPayServiceImpl implements PhPayService {
 			String thirdSerialId = map.get("");
 			String outBoundSubReturnStr;
 			if(updateType == 1){
-				//CP向CDP发起下行短信
-				try {//smart号：09234105821，空号09612444042
-					outBoundSubReturnStr = phPayService.smsOutBoundSubscribeProductRequest(userPhone);
-					LoggerUtils.info(LOGGER, "subscribe success outbound>>>>>>>>>>" + outBoundSubReturnStr);
-				} catch (Exception e) {
-					e.printStackTrace();
-				}
 				LoggerUtils.info(LOGGER, "添加首次订阅");
-				//首次订阅
-				phService.createIndiaReNewWal(mmProductEntity, updateTime, userPhone, thirdSerialId, map, OrderStatusEnum.CHARGED.getCode(), OrderTypeEnum.FRIST_SUBSCRIBLE.getCode());
+				Integer orderId = phService.createIndiaReNewWal(mmProductEntity, updateTime, userPhone, thirdSerialId, map, OrderStatusEnum.PROCESSING.getCode(), OrderTypeEnum.FRIST_SUBSCRIBLE.getCode());
+				try {
+					// 向CDP发起扣费请求
+					this.smsOutBoundSubscribeProductRequest(userPhone, orderId);
+				} catch (Exception e) {
+					LOGGER.error("attention: 向CDP发起下行短信异常", e);
+				}
 			}else if(updateType == 2){
 				LoggerUtils.info(LOGGER, "添加退订记录");
 				phService.createIndiaUnSubScribe(mmProductEntity, updateTime, userPhone, thirdSerialId, map);
 			}else if(updateType == 3){
-				LoggerUtils.info(LOGGER, "smart_sun: 意义不明处：updateType = 3");
-//				phService.createIndiaReNewWal(mmProductEntity, updateTime, userPhone, thirdSerialId, map, OrderStatusEnum.CHARGED.getCode(), OrderTypeEnum.RENEW.getCode());
+				// suspend & lifting处理
+				phService.handleSuspendAndLift(mmProductEntity, updateTime, userPhone, map);
 			}else{
 				LoggerUtils.info(LOGGER, "订单同步返回异常");
 			}

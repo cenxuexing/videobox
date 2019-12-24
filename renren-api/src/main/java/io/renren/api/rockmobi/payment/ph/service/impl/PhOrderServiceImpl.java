@@ -6,6 +6,8 @@
 package io.renren.api.rockmobi.payment.ph.service.impl;
 
 import io.renren.api.rockmobi.payment.ph.service.PhOrderService;
+import io.renren.api.rockmobi.payment.ph.service.PhPayService;
+import io.renren.api.rockmobi.payment.ph.service.SunPayService;
 import io.renren.api.rockmobi.user.entity.UserEntity;
 import io.renren.api.rockmobi.user.service.UserService;
 import io.renren.common.constant.CommonConstant;
@@ -19,11 +21,11 @@ import io.renren.entity.MmProductOrderEntity;
 import io.renren.service.MmProductOrderService;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.codec.digest.DigestUtils;
-import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.Date;
+import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
 
@@ -43,9 +45,13 @@ public class PhOrderServiceImpl implements PhOrderService {
 
     @Autowired
     private UserService userService;
+    @Autowired
+    private PhPayService phPayService;
+    @Autowired
+    private SunPayService sunPayService;
 
     @Override
-    public void createIndiaReNewWal(MmProductEntity mmProductEntity, Date updateTime, String userPhone, String thirdSerialId, Map<String, String> reNewParam, Integer orderState, Integer orderType) {
+    public Integer createIndiaReNewWal(MmProductEntity mmProductEntity, Date updateTime, String userPhone, String thirdSerialId, Map<String, String> reNewParam, Integer orderState, Integer orderType) {
         Date activeDate = new Date();
         String orderNum = serialNumberUtils.createProductOrderCode();
         MmProductOrderEntity mpe = new MmProductOrderEntity();
@@ -82,6 +88,7 @@ public class PhOrderServiceImpl implements PhOrderService {
             user.setCreateTime(updateTime);
             userService.insert(user);
         }
+        return mpe.getId();
     }
 
     @Override
@@ -122,6 +129,13 @@ public class PhOrderServiceImpl implements PhOrderService {
         }
     }
 
+    public static void main(String[] args) {
+        Map<String, String> map = new HashMap<>();
+        map.put("key", "ddd");
+        System.out.println();
+        System.out.println(map.toString());
+    }
+
     @Override
     public void handleSuspendAndLift(MmProductEntity mmProductEntity, Date updateTime, String userPhone, Map<String, String> map) {
         // 读取用户的最近一条订单
@@ -133,46 +147,37 @@ public class PhOrderServiceImpl implements PhOrderService {
         }
         if (map.containsKey("durationOfSuspendPeriod")) {
         // 用户账户余额不足扣费，需要将订单状态改为1，用户变成Suspend状态
-            if (lastOrder.getOrderState() == 3) {
-                // 先前扣费成功的，后来欠费了，需要创建Suspend状态的订单
-                log.info("用户【{}】扣费失败，进入Suspend状态", userPhone);
-                this.createAndSaveNewOrderRecord(lastOrder, OrderStatusEnum.PROCESSING, null, null);
-            }
-            // 剩下的（状态1的不需要处理，其他状态的不应该出现）不需要处理，后面在定时器处理90天的suspend期，过期后将订单状态从1改为4
+            log.info("用户【{}】扣费失败，进入Suspend状态, orderStatus: {}", userPhone, lastOrder.getOrderState());
+            lastOrder.setOrderState(OrderStatusEnum.SUSPEND.getCode());
+            // 扣费成功，更新更新时间
+            lastOrder.setUpdateTime(new Date());
+            lastOrder.setExt2(map.toString());
+            mmProductOrderService.updateById(lastOrder);
 
         } else if (Objects.equals(map.get("status"), "0")) {
-        // lifting请求，用户后来充值，扣费成功，脱离Suspend状态。根据原始订单生成续订31或初订30的订单
-            log.info("用户【{}】扣费成功，脱离Suspend状态", userPhone);
-            Date expireDate = DateUtils.addDateHours(DateUtils.addDateDays(new Date(), 1), 1);
-            this.createAndSaveNewOrderRecord(lastOrder, OrderStatusEnum.CHARGED,
-                    lastOrder.getOrderType() == 1 ? OrderTypeEnum.RENEW : OrderTypeEnum.FRIST_SUBSCRIBLE, expireDate);
+        // lifting请求，用户后来充值，扣费成功，脱离Suspend状态
+            log.info("用户【{}】充值，可以脱离Suspend状态", userPhone);
+            // 扣费成功，更新时间
+            lastOrder.setUpdateTime(new Date());
+            lastOrder.setPayStartTime(new Date());
+            lastOrder.setExpireDate(DateUtils.addDateDays(updateTime, mmProductEntity.getProductPeriod()));
+            lastOrder.setExt3(map.toString());
+            mmProductOrderService.updateById(lastOrder);
+            // 扣费接口调用
+            try {
+                if (mmProductEntity.getOperatorId() == 10012) {
+                    sunPayService.smsOutBoundSubscribeProductRequest(userPhone, lastOrder.getId());
+                } else if (mmProductEntity.getOperatorId() == 1002) {
+                    phPayService.smsOutBoundSubscribeProductRequest(userPhone, lastOrder.getId());
+                } else {
+                    log.error("未知的运营商：{}，userPhone：{}", mmProductEntity.getOperatorId(), userPhone);
+                }
+            } catch (Exception e) {
+                log.error("用户充值触发lifting，发送扣费短信到CDP异常", e);
+            }
+
         } else
             log.error("非suspend和非lifting的未知状态的订单结果：{}，orderId:{}", map, lastOrder.getId());
 
     }
-
-    private void createAndSaveNewOrderRecord(MmProductOrderEntity lastOrder,
-                                             OrderStatusEnum orderStatusEnum, OrderTypeEnum orderTypeEnum, Date expireDate) {
-        MmProductOrderEntity order = new MmProductOrderEntity();
-        BeanUtils.copyProperties(lastOrder, order);
-        order.setProductOrderCode(serialNumberUtils.createProductOrderCode());
-        order.setExt1(null);
-        // 生成续订订单
-        order.setOrderType(orderStatusEnum.getCode());
-        if (null != orderTypeEnum)
-            order.setOrderState(orderTypeEnum.getCode());
-        // 修改时间信息
-        order.setCreateTime(new Date());
-        order.setUpdateTime(new Date());
-        order.setPayEndTime(new Date());
-        order.setPayStartTime(new Date());
-        order.setExpireDate(expireDate);
-
-        // 通知相关
-        order.setChannelNotifyTime(null);
-        order.setChannelNotifyState(null);
-        mmProductOrderService.insert(order);
-    }
-
-
 }

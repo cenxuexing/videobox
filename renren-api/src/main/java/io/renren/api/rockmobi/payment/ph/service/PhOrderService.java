@@ -26,7 +26,7 @@ public interface PhOrderService {
      * @param orderState
      * @param orderType
      */
-    void createIndiaReNewWal(MmProductEntity mmProductEntity, Date activeDate, String userPhone, String thirdSerialId, Map<String, String> reNewParam, Integer orderState, Integer orderType);
+    Integer createIndiaReNewWal(MmProductEntity mmProductEntity, Date activeDate, String userPhone, String thirdSerialId, Map<String, String> reNewParam, Integer orderState, Integer orderType);
 
     /**
      * 创建退订订单
