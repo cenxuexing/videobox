@@ -68,16 +68,10 @@ ph:
     sp_password: 0lS90z2h
     sub_url: http://203.87.166.59:8312/1/smsmessaging/outbound/5840/requests
     notify_url: http://10.111.40.200/renren-api/ph/notify/client/delivery/status/json
-    # 2019年12月20日13:59:21 注释原有
-#    server_id: 64092000011882 #0064092000011854
-#    product_id: 1000030431 #1000015904 1000015927 1000016205
     server_id: 64092000011915
     product_id: 1000030491
     partner_id: 6409
   wap:
-    # 2019年12月20日13:59:21 注释原有
-#    server_id: 64092000011882
-#    product_id: 1000030431 #1000015884 1000015927 1000016205
     server_id: 64092000011915
     product_id: 1000030491
     sub_url: http://203.87.166.59:8310/SubscribeManageService/services/SubscribeManage
@@ -87,16 +81,10 @@ ph:
     sp_password: 0lS90z2h
     sub_url: http://203.87.166.59:8312/1/smsmessaging/outbound/5840/requests
     notify_url: http://10.111.40.200/renren-api/sun/notify/client/delivery/status/json
-    # 2019年12月20日11:56:03 注释原有
-#    server_id: 64092000011881
-#    product_id: 1000030425
     server_id: 64092000011914
     product_id: 1000030489
     partner_id: 6409
   wapsun:
-    # 2019年12月20日11:56:03 注释原有
-#    server_id: 64092000011881
-#    product_id: 1000030425
     server_id: 64092000011914
     product_id: 1000030489
     sub_url: http://203.87.166.59:8310/SubscribeManageService/services/SubscribeManage
