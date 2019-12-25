@@ -11,6 +11,7 @@ public class DeliveryInfoNotification implements Serializable {
 	private static final long serialVersionUID = -1660238992815863128L;
 
 	private List<DeliveryInfo> deliveryInfo;
+	private String callbackData;
 	
 	public List<DeliveryInfo> getDeliveryInfo() {
 		return deliveryInfo;
@@ -20,4 +21,11 @@ public class DeliveryInfoNotification implements Serializable {
 		this.deliveryInfo = deliveryInfo;
 	}
 
+	public String getCallbackData() {
+		return callbackData;
+	}
+
+	public void setCallbackData(String callbackData) {
+		this.callbackData = callbackData;
+	}
 }

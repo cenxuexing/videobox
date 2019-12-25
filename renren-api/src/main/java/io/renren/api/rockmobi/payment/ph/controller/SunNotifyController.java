@@ -185,7 +185,7 @@ public class SunNotifyController {
             List<DeliveryInfo> deliveryInfo = outBoundCellbackReq.getDeliveryInfoNotification().getDeliveryInfo();
             DeliveryInfo info = deliveryInfo.get(0);
             String deliveryStatus = info.getDeliveryStatus();
-            Integer orderId = Integer.parseInt(info.getCallbackData());
+            Integer orderId = Integer.parseInt(outBoundCellbackReq.getDeliveryInfoNotification().getCallbackData());
             if ("DeliveredToTerminal".equals(deliveryStatus) || "DeliveryNotificationNotSupported".equals(deliveryStatus)) {
                 // 扣费成功
                 MmProductOrderEntity orderEntity = new MmProductOrderEntity();
