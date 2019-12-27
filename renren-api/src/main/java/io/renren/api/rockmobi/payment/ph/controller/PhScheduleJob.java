@@ -51,7 +51,7 @@ public class PhScheduleJob {
      * 初始化续费订单，并发起付费请求【3.3 outbound】，等待CDP返回结果，更新订单状态
      */
     @Scheduled(cron = "0 0 23 * * ?")
-    public void autoRenewJob_smart() {
+    public void autoRenewJobSmart() {
         String lock_key = "smart_lock_20191218_16";
         RLock rLock = redissonService.getLock(lock_key);
         if (!rLock.isLocked())
@@ -74,7 +74,7 @@ public class PhScheduleJob {
      * 初始化续费订单，并发起付费请求【3.3 outbound】，等待CDP返回结果，更新订单状态
      */
     @Scheduled(cron = "0 0 23 * * ?")
-    public void autoRenewJob_sun() {
+    public void autoRenewJobSun() {
         String lock_key = "sun_lock_20191218_16";
         RLock rLock = redissonService.getLock(lock_key);
         if (!rLock.isLocked())

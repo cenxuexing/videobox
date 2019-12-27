@@ -86,4 +86,10 @@ public interface PhPayService {
 	 * 出站SMS消息传送状态
 	 */
 	String outBoundSmsDeliveryStatus();
+
+	/**
+	 * 发送 GameHelp关键词的回复短信
+	 * @param map
+	 */
+    void sendGameHelpReply(String map);
 }

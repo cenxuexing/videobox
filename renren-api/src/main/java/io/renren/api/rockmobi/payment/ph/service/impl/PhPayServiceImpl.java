@@ -79,6 +79,12 @@ public class PhPayServiceImpl implements PhPayService {
 	@Value("${ph.wap.lp_url}")
 	private String wapLpUrl;
 
+	@Value("${ph.sm.help_product_id:}")
+	private String helpProductId;
+
+	@Value("${ph.sm.help_notify_url:}")
+	private String helpNotifyUrl;
+
 
 	@Autowired
 	private SerialNumberUtils serialNumberUtils;
@@ -399,5 +405,34 @@ public class PhPayServiceImpl implements PhPayService {
 			//处理返回的错误信息
 		}
 		return null;
+	}
+
+	@Override
+	public void sendGameHelpReply(String json) {
+		JSONObject jsonObject = JSONObject.parseObject(json);
+		try {
+			String phoneNo = jsonObject.getJSONObject("inboundSMSMessageNotification")
+					.getJSONObject("inboundSMSMessage").getString("senderAddress").replace("tel:", "");
+			CallbackReference callbackReference = new CallbackReference();
+			callbackReference.setNotifyURL(helpNotifyUrl);
+			callbackReference.setNotificationFormat("json");
+			Map mapMsmText = Maps.newLinkedHashMap();
+			mapMsmText.put("message", "Enjoy unlimited games to play online or download to play. To subscribe, text GAME ON to 5840 at P5/day. To quit, text GAME OFF for free. Qs? Email MAXPANSHI@163.com");
+			List<String> list = Lists.newArrayList();
+			list.add(phoneNo);
+			Map mapCall = Maps.newLinkedHashMap();
+			mapCall.put("address", JSON.toJSON(list));
+			mapCall.put("senderAddress", "5840");
+			mapCall.put("receiptRequest", callbackReference);
+			mapCall.put("outboundSMSTextMessage", mapMsmText);
+
+			Map mapSub = Maps.newLinkedHashMap();
+			mapSub.put("outboundSMSMessageRequest", mapCall);
+			LOGGER.info("PH GAME HELP reply: 请求参数:{}", JSONObject.parseObject(JSON.toJSONString(mapSub)).toJSONString());
+			String result = HttpUtil.doPostSmsSub(smsSubUrl, JSONObject.parseObject(JSON.toJSONString(mapSub)).toJSONString(), smsSpPassword, "00"+smsServiceId, helpProductId, "outbound", phoneNo);
+			LOGGER.info("PH GAME HELP reply: 响应结果：{}", result);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
 	}
 }

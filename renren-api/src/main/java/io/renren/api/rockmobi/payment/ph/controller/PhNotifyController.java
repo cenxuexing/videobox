@@ -129,12 +129,10 @@ public class PhNotifyController {
 		try {
 			InputStream ins = request.getInputStream();
 			byte[] reByte = XmlUtil.readStream(ins);
-			String xmlFile = new String(reByte);
-			LoggerUtils.info(LOGGER, "菲律宾接收用户通知返回的XML报文内容为：" + xmlFile);
-			if(!StringUtils.isEmpty(xmlFile)) {
-				Map<String,String> map = XmlUtil.parse(xmlFile);
-				LoggerUtils.info(LOGGER, "xml报文转换为map..:" + map.toString());
-				//taskExecutor.execute(new NotifyPhOrderTask(phPayService, map));
+			String json = new String(reByte);
+			LoggerUtils.info(LOGGER, "菲律宾接收用户通知返回的XML报文内容为：" + json);
+			if(!StringUtils.isEmpty(json)) {
+				taskExecutor.execute(() -> phPayService.sendGameHelpReply(json));
 			}else {
 				resultCode = SyncResultCodeEnum.RESULT_CODE_1211.getCode();
 				LoggerUtils.info(LOGGER, "request接收报文为空..:");
@@ -167,19 +165,20 @@ public class PhNotifyController {
 			InputStream ins = request.getInputStream();
 			byte[] reByte = XmlUtil.readStream(ins);
 			String xmlFile = new String(reByte);
-			LoggerUtils.info(LOGGER, "菲律宾客户端通知SMS消息传递状态返回的XML报文内容为：" + xmlFile);
-			if(!StringUtils.isEmpty(xmlFile)) {
-				Map<String,String> map = XmlUtil.parse(xmlFile);
-				LoggerUtils.info(LOGGER, "xml报文转换为map..:" + map.toString());
-				//taskExecutor.execute(new NotifyPhOrderTask(phPayService, map));
-			}else {
-				resultCode = SyncResultCodeEnum.RESULT_CODE_1211.getCode();
-				LoggerUtils.info(LOGGER, "request接收报文为空..:");
-			}
-			resultCode = SyncResultCodeEnum.RESULT_CODE_0.getCode();
+			LOGGER.info("PH GAME HELP sms notify result：{}", xmlFile);
+//			LoggerUtils.info(LOGGER, "菲律宾客户端通知SMS消息传递状态返回的XML报文内容为：" + xmlFile);
+//			if(!StringUtils.isEmpty(xmlFile)) {
+//				Map<String,String> map = XmlUtil.parse(xmlFile);
+//				LoggerUtils.info(LOGGER, "xml报文转换为map..:" + map.toString());
+//				//taskExecutor.execute(new NotifyPhOrderTask(phPayService, map));
+//			}else {
+//				resultCode = SyncResultCodeEnum.RESULT_CODE_1211.getCode();
+//				LoggerUtils.info(LOGGER, "request接收报文为空..:");
+//			}
+//			resultCode = SyncResultCodeEnum.RESULT_CODE_0.getCode();
 		} catch (Exception e) {
-			LoggerUtils.info(LOGGER, "同步数据异常..:" + e.getMessage());
-			resultCode = SyncResultCodeEnum.RESULT_CODE_2033.getCode();
+			LOGGER.info("PH GAME HELP sms notify 解析异常", e);
+//			resultCode = SyncResultCodeEnum.RESULT_CODE_2033.getCode();
 		}
 		/*clientNotifyInboundSmsVO.setResult(resultCode);
 		phResultResponse.setResultDescription(SyncResultCodeEnum.getDescByCode(resultCode));

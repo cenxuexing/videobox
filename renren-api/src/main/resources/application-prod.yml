@@ -71,6 +71,8 @@ ph:
     server_id: 64092000011915
     product_id: 1000030491
     partner_id: 6409
+    help_product_id: 1000030493
+    help_notify_url: http://10.111.40.200/renren-api/ph/notify/client/delivery/status
   wap:
     server_id: 64092000011915
     product_id: 1000030491
@@ -84,6 +86,8 @@ ph:
     server_id: 64092000011914
     product_id: 1000030489
     partner_id: 6409
+    help_product_id: 1000030492
+    help_notify_url: http://10.111.40.200/renren-api/ph/notify/client/delivery/status
   wapsun:
     server_id: 64092000011914
     product_id: 1000030489
