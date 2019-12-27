@@ -311,6 +311,11 @@ public class HttpUtil {
         return retStr;
     }
 
+
+    public static String doPostSmsSub(String postUrl, String json, String spPassword, String smsServiceId, String productId, String type, String phoneNo) {
+        return doPostSmsSub(postUrl, json, spPassword, smsServiceId, productId, type, phoneNo, null);
+    }
+
     /**
      * 菲律宾短信订阅发送请求
      * @param postUrl
@@ -318,9 +323,10 @@ public class HttpUtil {
      * @param spPassword
      * @param smsServiceId
      * @param productId
+     * @param messageId
      * @return
      */
-    public static String doPostSmsSub(String postUrl, String json, String spPassword, String smsServiceId, String productId, String type, String phoneNo) {
+    public static String doPostSmsSub(String postUrl, String json, String spPassword, String smsServiceId, String productId, String type, String phoneNo, String messageId) {
         String retStr = "";
         String nonce = String.valueOf(RandomUtil.getUpperCode(30, RandomUtil.SecurityCodeLevel.Medium, true));
         String created = DateUtils.format(new Date(), DateUtils.DATE_TIME4_PATTERN);
@@ -343,10 +349,11 @@ public class HttpUtil {
             //httpPost.setHeader("Host", "168.63.246.122:80");
             httpPost.setHeader("Authorization", "WSSE realm=\"CDP\",profile=\"UsernameToken\"");
             httpPost.setHeader("X-WSSE", "UsernameToken Username=\"006409\",PasswordDigest=\""+passwordDigst+"\",Nonce=\""+nonce+"\",Created=\""+created+"\"" );
-            if(type.equals("inbound")){
-                httpPost.setHeader("X-RequestHeader", "request ServiceId=\""+smsServiceId+"\"");//\"++ \"");
-            }else{
-                httpPost.setHeader("X-RequestHeader", "request ProductId=\""+ productId +"\",ServiceId=\""+smsServiceId+"\",FA=\""+"tel:"+phoneNo+"\"");
+            if (type.equals("inbound")) {
+                httpPost.setHeader("X-RequestHeader", "request ServiceId=\"" + smsServiceId + "\"");//\"++ \"");
+            } else {
+                httpPost.setHeader("X-RequestHeader", "request ProductId=\"" + productId + "\",ServiceId=\"" + smsServiceId + "\",FA=\"" + "tel:" + phoneNo + "\"" +
+                        (StringUtils.isEmpty(messageId) ? "" : ",LinkId=\"" + messageId + "\""));
             }
 
             StringEntity data = new StringEntity(json,

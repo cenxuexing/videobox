@@ -411,8 +411,10 @@ public class PhPayServiceImpl implements PhPayService {
 	public void sendGameHelpReply(String json) {
 		JSONObject jsonObject = JSONObject.parseObject(json);
 		try {
-			String phoneNo = jsonObject.getJSONObject("inboundSMSMessageNotification")
-					.getJSONObject("inboundSMSMessage").getString("senderAddress").replace("tel:", "");
+			JSONObject inboundSMSMessage = jsonObject.getJSONObject("inboundSMSMessageNotification")
+					.getJSONObject("inboundSMSMessage");
+			String messageId = inboundSMSMessage.getString("messageId");
+			String phoneNo = inboundSMSMessage.getString("senderAddress").replace("tel:", "");
 			CallbackReference callbackReference = new CallbackReference();
 			callbackReference.setNotifyURL(helpNotifyUrl);
 			callbackReference.setNotificationFormat("json");
@@ -429,7 +431,7 @@ public class PhPayServiceImpl implements PhPayService {
 			Map mapSub = Maps.newLinkedHashMap();
 			mapSub.put("outboundSMSMessageRequest", mapCall);
 			LOGGER.info("PH GAME HELP reply: 请求参数:{}", JSONObject.parseObject(JSON.toJSONString(mapSub)).toJSONString());
-			String result = HttpUtil.doPostSmsSub(smsSubUrl, JSONObject.parseObject(JSON.toJSONString(mapSub)).toJSONString(), smsSpPassword, "00"+smsServiceId, helpProductId, "outbound", phoneNo);
+			String result = HttpUtil.doPostSmsSub(smsSubUrl, JSONObject.parseObject(JSON.toJSONString(mapSub)).toJSONString(), smsSpPassword, "00"+smsServiceId, helpProductId, "outbound", phoneNo, messageId);
 			LOGGER.info("PH GAME HELP reply: 响应结果：{}", result);
 		} catch (Exception e) {
 			e.printStackTrace();
